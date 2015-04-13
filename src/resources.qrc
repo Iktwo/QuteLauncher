@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>qml/main.qml</file>
+        <file>qml/ApplicationGrid.qml</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file alias="test">resources/images/test.png</file>
+        <file alias="background">resources/images/background.jpg</file>
+    </qresource>
+</RCC>
