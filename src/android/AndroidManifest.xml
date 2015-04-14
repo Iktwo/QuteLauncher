@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<manifest package="com.iktwo.qutelauncher" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.1" android:versionCode="1" android:installLocation="auto">
+<manifest package="com.iktwo.qutelauncher" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.01" android:versionCode="1" android:installLocation="auto">
     <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="qutelauncher" android:theme="@style/AppTheme">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="com.iktwo.qutelauncher.QPackageManager" android:label="Qutelauncher" android:screenOrientation="unspecified" android:launchMode="singleInstance">
             <intent-filter>
