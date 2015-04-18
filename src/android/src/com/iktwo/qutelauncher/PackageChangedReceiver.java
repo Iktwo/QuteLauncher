@@ -20,8 +20,8 @@ public class PackageChangedReceiver extends BroadcastReceiver {
         final String action = intent.getAction();
 
         if (action.equals("android.intent.action.PACKAGE_ADDED")) {
-            if (QPackageManager.isApplaunchable(packageName))
-                jpackageAdded(QPackageManager.getApplicationLabel(packageName), packageName, qtObject);
+            if (QuteLauncher.isApplaunchable(packageName))
+                jpackageAdded(QuteLauncher.getApplicationLabel(packageName), packageName, qtObject);
         } else if (action.equals("android.intent.action.PACKAGE_REMOVED")) {
             jpackageRemoved(packageName, qtObject);
         }

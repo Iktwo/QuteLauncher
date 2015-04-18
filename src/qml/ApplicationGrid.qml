@@ -1,6 +1,8 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
+import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
+import com.iktwo.qutelauncher 1.0
 
 GridView {
     id: root
@@ -8,7 +10,7 @@ GridView {
     property int highlightedItem
 
     maximumFlickVelocity: height * 2.5
-    cacheBuffer: height * 5
+    cacheBuffer: Math.max(0, height * 5)
 
     add: Transition {
         NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 450 }
@@ -20,75 +22,63 @@ GridView {
         NumberAnimation { property: "scale"; to: 1.0 }
     }
 
+    clip: true
     visible: false
     interactive: visible
 
-    cellHeight: height / 5
+    cellHeight: height / 6
     cellWidth: width / 4
 
     delegate: Item {
         id: itemDelegate
 
-        property var rect: mapToItem(root.parent)
-
         height: GridView.view.cellHeight
         width: GridView.view.cellWidth
 
-        onXChanged: rect = mapToItem(root.parent)
-        onYChanged: rect = mapToItem(root.parent)
-        onHeightChanged: rect = mapToItem(root.parent)
-        onWidthChanged: rect = mapToItem(root.parent)
-
-        Item {
+        ColumnLayout {
             id: container
 
             anchors {
-                fill: parent
-                margins: dpi * 0.04
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+
+            Image {
+                id: icon
+
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                Layout.preferredHeight: Math.round(59 * ScreenValues.dp)
+                Layout.preferredWidth: Math.round(59 * ScreenValues.dp)
+
+                antialiasing: true
+                asynchronous: true
+                fillMode: Image.PreserveAspectFit
+                source: "image://icon/" + model.packageName
             }
 
             Label {
-                anchors {
-                    left: parent.left; leftMargin: dpi * 0.02
-                    right: parent.right; rightMargin: dpi * 0.02
-                    bottom: parent.bottom; bottomMargin: dpi * 0.03
-                }
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                Layout.preferredWidth: parent.width * 0.90
 
                 text: model.name
 
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.NoWrap
-                maximumLineCount: 2
+                maximumLineCount: 1
 
-                font {
-                    pointSize: 14
-                }
+                font.pixelSize: 12 * ScreenValues.dp
 
-                color: "white"
+                color: "#666666"
             }
-
-            Image {
-                id: icon
-
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    top: parent.top; topMargin: parent.height * 0.2
-                }
-
-                antialiasing: true
-                height: parent.height * 0.6
-                width: parent.width * 0.6
-                asynchronous: true
-                fillMode: Image.PreserveAspectFit
-                source: "image://icon/" + model.packageName
-            }
-
         }
 
         MouseArea {
             anchors.fill: parent
-            onClicked: packageManager.launchApplication(model.packageName)
+            onClicked: PackageManager.launchApplication(model.packageName)
         }
     }
 }
