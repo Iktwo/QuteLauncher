@@ -95,7 +95,7 @@ void PackageManager::launchApplication(const QString &application)
     // qDebug() << "Trying to launch:" << application;
 
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QPackageManager",
+    QAndroidJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncher",
                                               "launchApplication",
                                               "(Ljava/lang/String;)V",
                                               QAndroidJniObject::fromString(application).object<jstring>());
@@ -133,7 +133,7 @@ void PackageManager::retrievePackages()
 {
     beginResetModel();
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject connectionType = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QPackageManager",
+    QAndroidJniObject connectionType = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                                                                  "applications",
                                                                                  "()[Lcom/iktwo/qutelauncher/Application;");
 
@@ -305,7 +305,7 @@ int PackageManager::indexOfSection(const QString &section)
 void PackageManager::openApplicationInfo(const QString &packageName)
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QPackageManager",
+    QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                               "openApplicationInfo",
                                               "(Ljava/lang/String;)V",
                                               QAndroidJniObject::fromString(packageName).object<jstring>());
@@ -323,9 +323,9 @@ void PackageManager::testJNICall()
 {
 #ifdef Q_OS_ANDROID
     qDebug() << "GEtting instance";
-    QAndroidJniObject packageManager = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QPackageManager",
+    QAndroidJniObject packageManager = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                                                                  "getInstance",
-                                                                                 "()Lcom/iktwo/qutelauncher/QPackageManager;");
+                                                                                 "()Lcom/iktwo/qutelauncher/QuteLauncher;");
 
     packageManager.callMethod<void>("selectWidget");
     qDebug() << "PM:" << packageManager.toString();

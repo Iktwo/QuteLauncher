@@ -8,7 +8,7 @@ android {
     QT += androidextras gui-private
 
     OTHER_FILES += \
-        android/src/com/iktwo/qutelauncher/QPackageManager.java \
+        android/src/com/iktwo/qutelauncher/QuteLauncher.java \
         android/src/com/iktwo/qutelauncher/PackageChangedReceiver.java \
         android/AndroidManifest.xml
 }
@@ -22,3 +22,4 @@ SOURCES += $$files($$PWD/src/*.cpp)
 RESOURCES += resources.qrc
 
 include(deployment.pri)
+

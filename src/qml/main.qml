@@ -1,6 +1,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Window 2.2
+import com.iktwo.qutelauncher 1.0
 
 ApplicationWindow {
     id: applicationWindow
@@ -26,14 +27,13 @@ ApplicationWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: "black"
+        color: "#000000"
     }
 
     Image {
         id: imageBackground
 
         anchors.fill: parent
-        opacity: 0.5
 
         fillMode: Image.PreserveAspectCrop
 
@@ -43,13 +43,31 @@ ApplicationWindow {
         source: "image://wallpaper/"
     }
 
-    ApplicationGrid {
-        id: applicationGrid
+    Rectangle {
+        anchors {
+            fill: parent
+            leftMargin: 8 * ScreenValues.dp
+            rightMargin: 8 * ScreenValues.dp
+            topMargin: 6 * ScreenValues.dp
+            bottomMargin: 38 * ScreenValues.dp
+        }
 
-        visible: true
-        model: packageManager
+        color: "#f5f5f5"
+        radius: 2 * ScreenValues.dp
 
-        anchors.fill: parent
+        ApplicationGrid {
+            id: applicationGrid
+
+            visible: true
+            model: PackageManager
+
+            anchors.fill: parent
+        }
+    }
+
+    BusyIndicator {
+        anchors.centerIn: parent
+        running: imageBackground.status !== Image.Error && imageBackground.status !== Image.Ready
     }
 
     FocusScope {
@@ -64,6 +82,6 @@ ApplicationWindow {
     Timer {
         interval: 550
         running: true
-        onTriggered: packageManager.registerBroadcast()
+        onTriggered: PackageManager.registerBroadcast()
     }
 }

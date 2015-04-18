@@ -19,7 +19,7 @@ QImage IconImageProvider::requestImage(const QString &id, QSize *size, const QSi
     QImage image;
 
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject appIcon = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QPackageManager",
+    QAndroidJniObject appIcon = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                                                           "getApplicationIcon",
                                                                           "(Ljava/lang/String;)[B",
                                                                           QAndroidJniObject::fromString(id).object<jstring>());

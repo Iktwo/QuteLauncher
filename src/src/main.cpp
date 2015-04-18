@@ -11,7 +11,23 @@
 #include "packagemanager.h"
 #include "iconimageprovider.h"
 #include "wallpaperprovider.h"
-#include "uivalues.h"
+#include "screenvalues.h"
+
+static QObject *package_manager_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+
+    return new PackageManager();
+}
+
+static QObject *screen_values_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+
+    return new ScreenValues();
+}
 
 int main(int argc, char *argv[])
 {
@@ -23,18 +39,13 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    qDebug() << "PATH: " << QCoreApplication::applicationDirPath();
-
     QObject::connect(&engine, SIGNAL(quit()), QCoreApplication::instance(), SLOT(quit()));
 
-    PackageManager pm;
+    qmlRegisterSingletonType<PackageManager>("com.iktwo.qutelauncher", 1, 0, "PackageManager", package_manager_provider);
+    qmlRegisterSingletonType<ScreenValues>("com.iktwo.qutelauncher", 1, 0, "ScreenValues", screen_values_provider);
 
-    engine.rootContext()->setContextProperty("packageManager", &pm);
     engine.addImageProvider(QLatin1String("icon"), new IconImageProvider());
     engine.addImageProvider(QLatin1String("wallpaper"), new WallpaperProvider());
-
-    UIValues uiValues;
-    engine.rootContext()->setContextProperty(QStringLiteral("uiValues"), &uiValues);
 
     engine.load(QUrl("qrc:/qml/qml/main.qml"));
 
