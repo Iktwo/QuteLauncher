@@ -2,6 +2,7 @@
     <qresource prefix="/qml">
         <file>qml/main.qml</file>
         <file>qml/ApplicationGrid.qml</file>
+        <file>qml/ExpandableItem.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="test">resources/images/test.png</file>

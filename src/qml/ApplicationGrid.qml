@@ -10,7 +10,6 @@ GridView {
     property int highlightedItem
 
     maximumFlickVelocity: height * 2.5
-    cacheBuffer: Math.max(0, height * 5)
 
     add: Transition {
         NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 450 }
@@ -23,7 +22,6 @@ GridView {
     }
 
     clip: true
-    visible: false
     interactive: visible
 
     cellHeight: height / 6
@@ -52,7 +50,7 @@ GridView {
                 Layout.preferredHeight: Math.round(59 * ScreenValues.dp)
                 Layout.preferredWidth: Math.round(59 * ScreenValues.dp)
 
-                antialiasing: true
+                // antialiasing: true
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
                 source: "image://icon/" + model.packageName
@@ -80,5 +78,10 @@ GridView {
             anchors.fill: parent
             onClicked: PackageManager.launchApplication(model.packageName)
         }
+    }
+
+    onHeightChanged: {
+        if (cacheBuffer !== 0)
+            cacheBuffer = Math.max(1080, height * 5)
     }
 }
