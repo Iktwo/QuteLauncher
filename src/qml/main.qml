@@ -20,55 +20,16 @@ ApplicationWindow {
 
     property int currentResolution: 3
     property bool isScreenPortrait: height >= width
+    property bool activeScreen: Qt.application.state === Qt.ApplicationActive
 
-    width: 480
-    height: 800
+    color: "#00000000"
+
+    width: resolutions[currentResolution].width
+    height: resolutions[currentResolution].height
+
     visible: true
 
-    Rectangle {
-        anchors.fill: parent
-        color: "#000000"
-    }
-
-    Image {
-        id: imageBackground
-
-        anchors.fill: parent
-
-        fillMode: Image.PreserveAspectCrop
-
-        asynchronous: true
-        antialiasing: true
-
-        source: "image://wallpaper/"
-    }
-
-    Rectangle {
-        anchors {
-            fill: parent
-            leftMargin: 8 * ScreenValues.dp
-            rightMargin: 8 * ScreenValues.dp
-            topMargin: 6 * ScreenValues.dp
-            bottomMargin: 38 * ScreenValues.dp
-        }
-
-        color: "#f5f5f5"
-        radius: 2 * ScreenValues.dp
-
-        ApplicationGrid {
-            id: applicationGrid
-
-            visible: true
-            model: PackageManager
-
-            anchors.fill: parent
-        }
-    }
-
-    BusyIndicator {
-        anchors.centerIn: parent
-        running: imageBackground.status !== Image.Error && imageBackground.status !== Image.Ready
-    }
+    onActiveScreenChanged: console.log("activeScreen", activeScreen)
 
     FocusScope {
         id: backKeyHandler
@@ -76,12 +37,63 @@ ApplicationWindow {
         width: 1
 
         focus: true
-        Keys.onBackPressed: { }
+
+        Keys.onAsteriskPressed: {
+            if (explandableItem.isOpened) {
+                explandableItem.close()
+            }
+        }
+
+        Keys.onBackPressed: {
+            if (explandableItem.isOpened) {
+                explandableItem.close()
+            }
+        }
     }
 
     Timer {
         interval: 550
         running: true
         onTriggered: PackageManager.registerBroadcast()
+    }
+
+    Label {
+        anchors.centerIn: parent
+
+        color: "#cccccc"
+
+        font {
+            weight: Font.Light
+            pixelSize: ScreenValues.dp * 56
+        }
+
+        width: parent.width
+        wrapMode: Text.Wrap
+        horizontalAlignment: Text.AlignHCenter
+
+        Timer {
+            interval: 1000 * 60
+            running: true
+
+            triggeredOnStart: true
+            onTriggered: {
+                var date = new Date()
+                parent.text = date.toLocaleTimeString(Qt.locale().name)
+                interval = (1000 * (60 - date.getSeconds()))
+                restart()
+            }
+        }
+    }
+
+    ExpandableItem {
+        id: explandableItem
+
+        anchors.fill: parent
+
+        ApplicationGrid {
+            model: PackageManager
+
+            anchors.fill: parent
+        }
     }
 }

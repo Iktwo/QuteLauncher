@@ -191,6 +191,11 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
         }
     }
 
+    public static void pickWallpaper() {
+        Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+        m_instance.startActivity(Intent.createChooser(intent, "Select Wallpaper"));
+    }
+
 
     public static byte[] getSystemWallpaper() {
         wm = WallpaperManager.getInstance(m_instance);
