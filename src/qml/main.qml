@@ -96,4 +96,9 @@ ApplicationWindow {
             anchors.fill: parent
         }
     }
+
+    MouseArea {
+        anchors.fill: parent
+        enabled: explandableItem.busy
+    }
 }

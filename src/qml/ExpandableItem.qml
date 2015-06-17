@@ -4,6 +4,7 @@ import com.iktwo.qutelauncher 1.0
 Item {
     default property alias content: itemContainer.data
     property alias color: rectangleMinizedIndicator.color
+    property alias busy: transition.running
 
     property int minimizedHeight: Math.round(48 * ScreenValues.dp)
     property int minimizedWidth: Math.round(48 * ScreenValues.dp)
@@ -71,6 +72,8 @@ Item {
 
         transitions: [
             Transition {
+                id:  transition
+
                 from: "closed"
                 to: "opened"
                 reversible: true
