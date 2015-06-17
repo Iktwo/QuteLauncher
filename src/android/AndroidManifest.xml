@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <manifest package="com.iktwo.qutelauncher" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.02" android:versionCode="2" android:installLocation="auto">
-    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="qutelauncher" android:theme="@android:style/Theme.Wallpaper.NoTitleBar">
-        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="com.iktwo.qutelauncher.QuteLauncher" android:label="Qutelauncher" android:screenOrientation="unspecified" android:launchMode="singleInstance">
+    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="qutelauncher" android:theme="@style/AppTheme">
+        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="com.iktwo.qutelauncher.QuteLauncher" android:label="Qutelauncher" android:screenOrientation="portrait" android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.HOME"/>
@@ -35,7 +35,7 @@
             <!-- Splash screen -->
         </activity>
     </application>
-    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19"/>
+    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="21"/>
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
