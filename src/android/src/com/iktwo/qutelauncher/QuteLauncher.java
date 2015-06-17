@@ -28,6 +28,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.app.WallpaperManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.View;
 
 import com.iktwo.qutelauncher.R;
 
@@ -43,6 +44,17 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     private static int mIconDpi;
 
     private static PackageManager mPm;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+    }
 
     public static String connectionType() {
         cm = (ConnectivityManager) m_instance.getSystemService(CONNECTIVITY_SERVICE);
@@ -195,7 +207,6 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
         Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
         m_instance.startActivity(Intent.createChooser(intent, "Select Wallpaper"));
     }
-
 
     public static byte[] getSystemWallpaper() {
         wm = WallpaperManager.getInstance(m_instance);
