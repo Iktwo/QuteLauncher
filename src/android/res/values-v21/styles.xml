@@ -1,10 +1,7 @@
 <resources>
-  <!-- inherit from the material theme -->
-  <style name="AppTheme" parent="android:Theme.Material">
-    <!-- Main theme colors -->
-    <!--   your app branding color for the app bar -->
-    <item name="android:colorPrimary">#005CB8</item>
-    <!--   darker variant for the status bar and contextual app bars -->
-    <item name="android:colorPrimaryDark">#005CB8</item>
+    <style name="AppTheme" parent="android:Theme.Material">
+    <item name="android:navigationBarColor">@android:color/transparent</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    <item name="android:windowShowWallpaper">true</item>
   </style>
 </resources>
