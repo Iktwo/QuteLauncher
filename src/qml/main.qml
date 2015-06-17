@@ -29,10 +29,14 @@ ApplicationWindow {
 
     visible: true
 
-    onActiveScreenChanged: console.log("activeScreen", activeScreen)
+    onActiveScreenChanged: {
+        if (activeScreen)
+            ScreenValues.updateScreenValues()
+    }
 
     FocusScope {
         id: backKeyHandler
+
         height: 1
         width: 1
 
@@ -57,43 +61,59 @@ ApplicationWindow {
         onTriggered: PackageManager.registerBroadcast()
     }
 
-    Label {
-        anchors.centerIn: parent
-
-        color: "#cccccc"
-
-        font {
-            weight: Font.Light
-            pixelSize: ScreenValues.dp * 56
+    BorderImage  {
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
         }
 
-        width: parent.width
-        wrapMode: Text.Wrap
-        horizontalAlignment: Text.AlignHCenter
+        height: ScreenValues.statusBarHeight
 
-        Timer {
-            interval: 1000 * 60
-            running: true
+        source: "qrc:/images/shadow"
+        border.left: 5; border.top: 5
+        border.right: 5; border.bottom: 5
+    }
 
-            triggeredOnStart: true
-            onTriggered: {
-                var date = new Date()
-                parent.text = date.toLocaleTimeString(Qt.locale().name)
-                interval = (1000 * (60 - date.getSeconds()))
-                restart()
-            }
+    BorderImage  {
+        id: borderImageNavBar
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        height: ScreenValues.navBarVisible ? ScreenValues.navigationBarHeight : 0
+        source: ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
+
+        border {
+            left: 5; top: 5
+            right: 5; bottom: 5
         }
     }
 
-    ExpandableItem {
-        id: explandableItem
+    Item {
+        anchors {
+            top: parent.top; topMargin: ScreenValues.statusBarHeight
+            /// TODO: ask orientation and ask if nav bar is actually visible
+            /// it might not be in devices with hardware controls
+            bottom: borderImageNavBar.top
+            left: parent.left
+            right: parent.right
 
-        anchors.fill: parent
+        }
 
-        ApplicationGrid {
-            model: PackageManager
+        ExpandableItem {
+            id: explandableItem
 
             anchors.fill: parent
+
+            ApplicationGrid {
+                model: PackageManager
+
+                anchors.fill: parent
+            }
         }
     }
 
