@@ -8,8 +8,11 @@ android {
     QT += androidextras gui-private
 
     OTHER_FILES += \
-        android/src/com/iktwo/qutelauncher/QuteLauncher.java \
-        android/src/com/iktwo/qutelauncher/PackageChangedReceiver.java \
+        android/src/com/iktwo/qutelauncher/*.java \
+        android/src/org/qtproject/qt5/android/bindings/*.java \
+        android/res/values-v21/* \
+        android/res/values-v19/* \
+        android/res/values/* \
         android/AndroidManifest.xml
 }
 
