@@ -10,7 +10,6 @@
 
 #include "packagemanager.h"
 #include "iconimageprovider.h"
-#include "wallpaperprovider.h"
 #include "screenvalues.h"
 #include "launcher.h"
 #include "system.h"
@@ -65,7 +64,6 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType<Launcher>("com.iktwo.qutelauncher", 1, 0, "Launcher", launcher_provider);
 
     engine.addImageProvider(QLatin1String("icon"), new IconImageProvider());
-    engine.addImageProvider(QLatin1String("wallpaper"), new WallpaperProvider());
 
     engine.load(QUrl("qrc:/qml/qml/main.qml"));
 
