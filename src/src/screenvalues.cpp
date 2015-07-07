@@ -28,11 +28,7 @@ ScreenValues::ScreenValues(QObject *parent) :
 
 void ScreenValues::updateScreenValues()
 {
-    int offSet = 0;
-
 #ifdef Q_OS_ANDROID
-    qDebug() << m_system.sdkInt();
-
     if (m_system.sdkInt() >= 19) {
         QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
                                                                                "activity",
