@@ -5,7 +5,7 @@ TARGET = qute-launcher
 QT += qml quick widgets svg network
 
 android {
-    QT += androidextras gui-private
+    QT += androidextras
 
     OTHER_FILES += \
         android/src/com/iktwo/qutelauncher/*.java \
