@@ -9,7 +9,40 @@ GridView {
 
     property int highlightedItem
 
+    function getNumberOfTilesHorizontally() {
+        if (applicationWindow.isScreenPortrait) {
+            if (ScreenValues.isTablet) {
+                return 5
+            } else {
+                return 4
+            }
+        } else {
+            if (ScreenValues.isTablet) {
+                return 6
+            } else {
+                return 4
+            }
+        }
+    }
+
+    function getNumberOfTilesVertically() {
+        if (applicationWindow.isScreenPortrait) {
+            return 6
+        } else {
+            if (ScreenValues.isTablet) {
+                return 5
+            } else {
+                return 4
+            }
+        }
+    }
+
     maximumFlickVelocity: height * 2.5
+
+    header: Item {
+        width: parent.width
+        height: 20 * ScreenValues.dp
+    }
 
     add: Transition {
         NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 450 }
@@ -24,8 +57,8 @@ GridView {
     clip: true
     interactive: visible
 
-    cellHeight: height / 6
-    cellWidth: width / 4
+    cellHeight: height / getNumberOfTilesVertically()
+    cellWidth: width / getNumberOfTilesHorizontally()
 
     delegate: Item {
         id: itemDelegate
