@@ -8,7 +8,6 @@
 
 #ifdef Q_OS_ANDROID
 #include <QAndroidJniEnvironment>
-#include <QtGui/qpa/qplatformnativeinterface.h>
 
 static void packageAdded(JNIEnv *env, jobject thiz, jstring label, jstring packageName, jlong qtObject)
 {
