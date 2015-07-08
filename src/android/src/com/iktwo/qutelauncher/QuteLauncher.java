@@ -30,8 +30,6 @@ import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.iktwo.qutelauncher.R;
-
 public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity {
     final int APPWIDGET_HOST_ID = 2048;
     final int REQUEST_PICK_APPWIDGET = 0;
@@ -81,11 +79,6 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     {
         DisplayMetrics dm = m_instance.getResources().getDisplayMetrics();
         return dm.densityDpi;
-    }
-
-    public static boolean isTablet()
-    {
-        return m_instance.getResources().getBoolean(R.bool.isTablet);
     }
 
     @Override
