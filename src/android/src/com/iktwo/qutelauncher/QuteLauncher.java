@@ -29,6 +29,7 @@ import android.app.WallpaperManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.content.pm.ResolveInfo;
 
 public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity {
     final int APPWIDGET_HOST_ID = 2048;
@@ -95,23 +96,14 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     }
 
     public static Application[] applications() {
-        Log.d(TAG, "PM:" + mPm.toString());
-        List<ApplicationInfo> packages = mPm.getInstalledApplications(0);
-        Collections.sort(packages, new ApplicationInfo.DisplayNameComparator(mPm));
-        List<ApplicationInfo> apps = new ArrayList<ApplicationInfo>();
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> availableActivities = mPm.queryIntentActivities(intent, 0);
 
-        for (int i = 0; i < packages.size(); i++) {
-            String pkg = packages.get(i).packageName;
+        Application[] appArray = new Application[availableActivities.size()];
 
-            // only apps which are launchable
-            if (isApplaunchable(pkg)) {
-                apps.add(packages.get(i));
-            }
-        }
-
-        Application[] appArray = new Application[apps.size()];
-        for (int i = 0; i < apps.size(); i++) {
-            appArray[i] = new Application(getApplicationLabel(apps.get(i).packageName), apps.get(i).packageName);
+        for (int i = 0; i < availableActivities.size(); i++) {
+            appArray[i] = new Application(availableActivities.get(i).loadLabel(mPm).toString(), availableActivities.get(i).activityInfo.packageName);
         }
 
         for (int i = 0; i < appArray.length; i++) {
@@ -122,17 +114,7 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
             }
         }
 
-        for (int i = 0; i < appArray.length; i++) {
-            Log.d(TAG, "APPLICATION" + i + " NAME: " + appArray[i].name);
-        }
-
         Arrays.sort(appArray);
-
-        Log.e(TAG, "AFTER SORT");
-
-        for (int i = 0; i < appArray.length; i++) {
-            Log.d(TAG, "APPLICATION" + i + " NAME: " + appArray[i].name);
-        }
 
         return appArray;
     }
@@ -146,24 +128,19 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     }
 
     public static byte[] getApplicationIcon(String packageName) {
-         Log.d(TAG, "TRYING TO GET ICON FOR: " + packageName);
+        // Log.d(TAG, "TRYING TO GET ICON FOR: " + packageName);
 
         Drawable icon;
 
-        try
-        {
-            Log.d(TAG, "package manager" + mPm.toString());
+        /// Get application icon
+        try {
             ApplicationInfo app = mPm.getApplicationInfo(packageName, 0);
             Resources resources = mPm.getResourcesForApplication(app);
             ResolveInfo resolveInfo = mPm.resolveActivity(mPm.getLaunchIntentForPackage(packageName), 0);
-            Log.d(TAG, "RESOLVEINFO:" + resolveInfo.toString());
-            Log.d(TAG, "RESOURCES:" + resources.toString());
             icon = resources.getDrawableForDensity(resolveInfo.activityInfo.getIconResource(), mIconDpi);
-        } catch(Exception e)
-        {
+        } catch(Exception e) {
              Log.e(TAG, "exception getApplicationIcon for " + packageName, e);
              icon = null;
-            //return new byte[0];
         }
 
         if (icon == null)
@@ -181,16 +158,14 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     }
 
     public static String getApplicationLabel(String packageName) {
-        try
-        {
+        try {
             ApplicationInfo app = mPm.getApplicationInfo(packageName, 0);
 
             Resources resources = mPm.getResourcesForApplication(app);
             ResolveInfo resolveInfo = mPm.resolveActivity(mPm.getLaunchIntentForPackage(packageName), 0);
 
             return resolveInfo.loadLabel(mPm).toString();
-        } catch(Exception e)
-        {
+        } catch(Exception e) {
             Log.e(TAG, "getApplicationLabel for " + packageName, e);
             return "";
         }
@@ -199,16 +174,6 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     public static void pickWallpaper() {
         Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
         m_instance.startActivity(Intent.createChooser(intent, "Select Wallpaper"));
-    }
-
-    public static byte[] getSystemWallpaper() {
-        wm = WallpaperManager.getInstance(m_instance);
-        Drawable icon = wm.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable)icon).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] iconData = stream.toByteArray();
-        return iconData;
     }
 
     public static void openApplicationInfo(String packageName) {
