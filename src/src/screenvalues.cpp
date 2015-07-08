@@ -24,6 +24,8 @@ ScreenValues::ScreenValues(QObject *parent) :
     setNavigationBarHeightLandscape(getResourceSize("navigation_bar_height_landscape"));
 
     updateScreenValues();
+
+    m_isTablet = retrieveIsTablet();
 }
 
 void ScreenValues::updateScreenValues()
@@ -154,6 +156,30 @@ void ScreenValues::setNavBarVisible(bool visible)
     emit navBarVisibleChanged();
 }
 
+bool ScreenValues::retrieveIsTablet()
+{
+#ifdef Q_OS_ANDROID
+    QAndroidJniEnvironment env;
+    env->PushLocalFrame(9);
+
+    QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
+                                                                           "activity",
+                                                                           "()Landroid/app/Activity;");
+
+    QAndroidJniObject resources = activity.callObjectMethod("getResources",
+                                                            "()Landroid/content/res/Resources;");
+
+    QAndroidJniObject configuration = resources.callObjectMethod("getConfiguration",
+                                                                 "()Landroid/content/res/Configuration;");
+
+    jint smallestScreenWidthDp = configuration.getField<jint>("smallestScreenWidthDp");
+
+    return smallestScreenWidthDp >= 600;
+#else
+    return false;
+#endif
+}
+
 int ScreenValues::retrieveDpi()
 {
 #ifdef Q_OS_ANDROID
@@ -166,8 +192,8 @@ int ScreenValues::retrieveDpi()
     jclass activityClass = env->GetObjectClass(activity.object<jobject>());
 
     jmethodID mIDGetResources = env->GetMethodID(activityClass,
-                                                   "getResources",
-                                                   "()Landroid/content/res/Resources;");
+                                                 "getResources",
+                                                 "()Landroid/content/res/Resources;");
 
     jobject resources = env->CallObjectMethod(activity.object<jobject>(), mIDGetResources);
     jclass resourcesClass = env->GetObjectClass(resources);
@@ -212,7 +238,7 @@ int ScreenValues::getResourceSize(const QString &resource)
                                                  jDefPackage.object<jstring>());
 
     jint size = resources.callMethod<jint>("getDimensionPixelSize",
-                               "(I)I", identifier);
+                                           "(I)I", identifier);
 
     return size;
 #else

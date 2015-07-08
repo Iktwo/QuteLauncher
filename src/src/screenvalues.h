@@ -60,6 +60,8 @@ private:
     int retrieveDpi();
     int getResourceSize(const QString &resource);
 
+    bool retrieveIsTablet();
+
     void setStatusBarHeight(int statusBarHeight);
     void setNavigationBarHeight(int navigationBarHeight);
     void setNavigationBarHeightLandscape(int navigationBarHeightLandscape);
