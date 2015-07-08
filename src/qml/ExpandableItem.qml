@@ -9,7 +9,7 @@ Item {
     property int minimizedHeight: Math.round(48 * ScreenValues.dp)
     property int minimizedWidth: Math.round(48 * ScreenValues.dp)
 
-    property int targetWidth: Math.round(parent.width - (16 * ScreenValues.dp))
+    property int targetWidth: Math.round(parent.width - (getSideMargin() * ScreenValues.dp))
     property int targetHeight: Math.round(parent.height - (44 * ScreenValues.dp))
 
     property point minimizedPoint: Qt.point(Math.round(parent.width / 2), Math.round(parent.height - rectangleMinizedIndicator.height - (4 * ScreenValues.dp)))
@@ -20,6 +20,20 @@ Item {
 
     function close() {
         stateGroup.state = "closed"
+    }
+
+    function getSideMargin() {
+        if (applicationWindow.isScreenPortrait) {
+            if (ScreenValues.isTablet)
+                return -1 /// TODO: find right value
+            else
+                return 16
+        } else {
+            if (ScreenValues.isTablet)
+                return 138
+            else
+                return -1 /// TODO: find right value
+        }
     }
 
     Rectangle {
