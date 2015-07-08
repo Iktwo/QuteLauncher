@@ -96,12 +96,9 @@ ApplicationWindow {
     Item {
         anchors {
             top: parent.top; topMargin: ScreenValues.statusBarHeight
-            /// TODO: ask orientation and ask if nav bar is actually visible
-            /// it might not be in devices with hardware controls
             bottom: borderImageNavBar.top
             left: parent.left
             right: parent.right
-
         }
 
         ExpandableItem {
