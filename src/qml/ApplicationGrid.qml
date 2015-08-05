@@ -9,33 +9,8 @@ GridView {
 
     property int highlightedItem
 
-    function getNumberOfTilesHorizontally() {
-        if (applicationWindow.isScreenPortrait) {
-            if (ScreenValues.isTablet) {
-                return 5
-            } else {
-                return 4
-            }
-        } else {
-            if (ScreenValues.isTablet) {
-                return 6
-            } else {
-                return 4
-            }
-        }
-    }
-
-    function getNumberOfTilesVertically() {
-        if (applicationWindow.isScreenPortrait) {
-            return 6
-        } else {
-            if (ScreenValues.isTablet) {
-                return 5
-            } else {
-                return 4
-            }
-        }
-    }
+    /// TODO: send index here too
+    signal pressAndHold
 
     maximumFlickVelocity: height * 2.5
 
@@ -57,60 +32,20 @@ GridView {
     clip: true
     interactive: visible
 
-    cellHeight: height / getNumberOfTilesVertically()
-    cellWidth: width / getNumberOfTilesHorizontally()
+    cellHeight: height / applicationWindow.tilesVertically
+    cellWidth: width / applicationWindow.tilesHorizontally
 
-    delegate: Item {
-        id: itemDelegate
+    delegate: ApplicationTile {
+        id: applicationTile
 
         height: GridView.view.cellHeight
         width: GridView.view.cellWidth
 
-        ColumnLayout {
-            id: container
+        source: "image://icon/" + model.packageName
+        text: model.name
 
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-            }
-
-            Image {
-                id: icon
-
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Layout.preferredHeight: Math.round(59 * ScreenValues.dp)
-                Layout.preferredWidth: Math.round(59 * ScreenValues.dp)
-
-                // antialiasing: true
-                asynchronous: true
-                fillMode: Image.PreserveAspectFit
-                source: "image://icon/" + model.packageName
-            }
-
-            Label {
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Layout.preferredWidth: parent.width * 0.90
-
-                text: model.name
-
-                elide: Text.ElideRight
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.NoWrap
-                maximumLineCount: 1
-
-                font.pixelSize: 12 * ScreenValues.dp
-
-                color: "#666666"
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: PackageManager.launchApplication(model.packageName)
-        }
+        onClicked: PackageManager.launchApplication(model.packageName)
+        onPressAndHold: root.pressAndHold()
     }
 
     onHeightChanged: {
