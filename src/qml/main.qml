@@ -22,6 +22,38 @@ ApplicationWindow {
     property bool isScreenPortrait: height >= width
     property bool activeScreen: Qt.application.state === Qt.ApplicationActive
 
+    property int tilesHorizontally: getNumberOfTilesHorizontally(isScreenPortrait)
+    property int tilesVertically: getNumberOfTilesVertically(isScreenPortrait)
+
+    function getNumberOfTilesHorizontally(isScreenPortrait) {
+        if (isScreenPortrait) {
+            if (ScreenValues.isTablet) {
+                return 5
+            } else {
+                return 4
+            }
+        } else {
+            if (ScreenValues.isTablet) {
+                return 6
+            } else {
+                return 4
+            }
+        }
+    }
+
+    function getNumberOfTilesVertically(isScreenPortrait) {
+        if (isScreenPortrait) {
+            return 6
+        } else {
+            if (ScreenValues.isTablet) {
+                return 5
+            } else {
+                return 4
+            }
+        }
+    }
+
+
     color: "#00000000"
 
     width: resolutions[currentResolution].width
@@ -110,6 +142,8 @@ ApplicationWindow {
                 model: PackageManager
 
                 anchors.fill: parent
+
+                onPressAndHold: explandableItem.close()
             }
         }
     }
