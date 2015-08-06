@@ -4,6 +4,7 @@
         <file>qml/ApplicationGrid.qml</file>
         <file>qml/ExpandableItem.qml</file>
         <file>qml/ApplicationTile.qml</file>
+        <file>qml/IntroView.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="test">resources/images/test.png</file>
