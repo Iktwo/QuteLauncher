@@ -152,4 +152,16 @@ ApplicationWindow {
         anchors.fill: parent
         enabled: explandableItem.busy
     }
+
+    IntroView {
+        anchors.fill: parent
+
+        enabled: false
+        visible: false
+
+        model: ListModel {
+            ListElement { backgroundColor: "#1abd9c" }
+            ListElement { backgroundColor: "#2fcd72" }
+        }
+    }
 }
