@@ -2,7 +2,7 @@
 
 Qt Android launcher.
 
-Requires Qt >= 5.4
+Requires Qt >= 5.5
 
 #Screenshot
 ![](http://iktwo.github.io/QuteLauncher/images/screenshot.jpg) 
@@ -18,4 +18,4 @@ Requires Qt >= 5.4
 
 #How to compile
 
-There are no external dependencies, if you have Qt >= 5.4 for Android configured just open the project with QtCreator or follow this instructions if you don't want to use QtCreator http://doc.qt.io/qt-5/deployment-android.html
+There are no external dependencies, if you have Qt >= 5.5 for Android configured just open the project with QtCreator or follow this instructions if you don't want to use QtCreator http://doc.qt.io/qt-5/deployment-android.html
