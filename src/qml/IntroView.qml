@@ -6,6 +6,7 @@ FocusScope {
     property alias currentIndex: listView.currentIndex
     property alias model: listView.model
     property alias progress: animationController.progress
+    property alias enabled: listView.enabled
 
     readonly property double xPosition: (listView.contentX / listView.width)
 
@@ -92,8 +93,10 @@ FocusScope {
 
             color: "transparent"
 
-            border.color: "black"
-            border.width: 1
+            border {
+                color: "black"
+                width: 1
+            }
         }
     }
 
@@ -106,8 +109,8 @@ FocusScope {
 
                 target: rectangleBackground
                 property: "color"
-                from: model.get(0).backgroundColor
-                to: model.get(1).backgroundColor
+                from: model.count > 0 ? model.get(0).backgroundColor : "#000000"
+                to: model.count > 0 ? model.get(1).backgroundColor : "#000000"
 
                 onFromChanged: animationController.reload()
                 onToChanged: animationController.reload()
