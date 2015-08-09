@@ -125,10 +125,6 @@ ApplicationWindow {
         }
     }
 
-    ApplicationTile {
-        id: applicationTile
-    }
-
     Item {
         anchors {
             top: parent.top; topMargin: ScreenValues.statusBarHeight
@@ -172,5 +168,20 @@ ApplicationWindow {
             ListElement { backgroundColor: "#1abd9c" }
             ListElement { backgroundColor: "#2fcd72" }
         }
+    }
+
+    GridView {
+        anchors.fill: parent
+        model: 5
+        interactive: false
+        delegate: DropArea {
+            width: 200
+            height: 200
+        }
+    }
+
+    ApplicationTile {
+        id: applicationTile
+        dragTarget: applicationTile
     }
 }
