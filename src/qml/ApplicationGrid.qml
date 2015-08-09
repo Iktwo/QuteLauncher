@@ -9,8 +9,7 @@ GridView {
 
     property int highlightedItem
 
-    /// TODO: send index here too
-    signal pressAndHold
+    signal pressAndHold(var model)
 
     maximumFlickVelocity: height * 2.5
 
@@ -45,7 +44,7 @@ GridView {
         text: model.name
 
         onClicked: PackageManager.launchApplication(model.packageName)
-        onPressAndHold: root.pressAndHold()
+        onPressAndHold: root.pressAndHold(model)
     }
 
     onHeightChanged: {

@@ -125,6 +125,10 @@ ApplicationWindow {
         }
     }
 
+    ApplicationTile {
+        id: applicationTile
+    }
+
     Item {
         anchors {
             top: parent.top; topMargin: ScreenValues.statusBarHeight
@@ -143,7 +147,12 @@ ApplicationWindow {
 
                 anchors.fill: parent
 
-                onPressAndHold: explandableItem.close()
+                onPressAndHold: {
+                    applicationTile.source = "image://icon/" + model.packageName
+                    applicationTile.text = model.name
+
+                    explandableItem.close()
+                }
             }
         }
     }
