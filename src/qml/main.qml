@@ -171,12 +171,39 @@ ApplicationWindow {
     }
 
     GridView {
-        anchors.fill: parent
-        model: 5
+        /// TODO: verify in landscape mode
+        anchors {
+            top: parent.top; topMargin: ScreenValues.statusBarHeight
+            left: parent.left
+            right: parent.right
+        }
+
+        height: 4 * (80 * ScreenValues.dp)
+        model: 16
         interactive: false
+        cellHeight: height / 4
+        cellWidth: width / 4
+
         delegate: DropArea {
-            width: 200
-            height: 200
+            width: GridView.view.cellWidth
+            height: GridView.view.cellHeight
+        }
+    }
+
+    Row {
+        id: rowFavorites
+
+        anchors.bottom: borderImageNavBar.top
+
+        height: 80 * ScreenValues.dp
+
+        Repeater {
+            model: 5
+
+            DropArea {
+                width: 80 * ScreenValues.dp
+                height: 80 * ScreenValues.dp
+            }
         }
     }
 
