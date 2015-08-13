@@ -104,6 +104,19 @@ Item {
                 when: !mouseArea.drag.active
 
                 ParentChange { target: root; parent: root._newParent }
+
+                AnchorChanges {
+                    target: root
+
+                    anchors {
+                        verticalCenter: parent !== root._originalParent ? parent.verticalCenter : undefined
+                        horizontalCenter: parent !== root._originalParent ? parent.horizontalCenter : undefined
+                        left: undefined
+                        right: undefined
+                        top: undefined
+                        bottom: undefined
+                    }
+                }
             }
         ]
     }
