@@ -1,5 +1,5 @@
-import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick 2.5
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
 
 FocusScope {
@@ -7,8 +7,14 @@ FocusScope {
     property alias model: listView.model
     property alias progress: animationController.progress
     property alias enabled: listView.enabled
+    property alias delegate: listView.delegate
+    property alias view: listView
+    property alias buttonsContainerHeight: buttonsContainer.height
+    property alias rectangleDividerHeight: rectangleDivider.height
+    property alias dragging: listView.dragging
 
     readonly property double xPosition: (listView.contentX / listView.width)
+    readonly property bool movingLeft: listView.movingLeft
 
     onXPositionChanged:  {
         if (currentIndex < 0)
@@ -65,9 +71,13 @@ FocusScope {
 
         property bool movingLeft
 
-        /// TODO: may have to use flickStarted this to limit moving more than a page
+        anchors {
+            top: parent.top
+            bottom: buttonsContainer.top
+            left: parent.left
+            right: parent.right
+        }
 
-        anchors.fill: parent
         model: model
         orientation: ListView.Horizontal
 
@@ -97,6 +107,31 @@ FocusScope {
                 color: "black"
                 width: 1
             }
+        }
+    }
+
+    Item {
+        id: buttonsContainer
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        height: 57
+
+        Rectangle {
+            id: rectangleDivider
+
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            height: 1
+
+            color: "#44ffffff"
         }
     }
 
