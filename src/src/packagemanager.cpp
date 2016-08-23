@@ -91,8 +91,6 @@ void PackageManager::registerNativeMethods() {
 
 void PackageManager::launchApplication(const QString &application)
 {
-    // qDebug() << "Trying to launch:" << application;
-
 #ifdef Q_OS_ANDROID
     QAndroidJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncher",
                                               "launchApplication",
@@ -226,17 +224,6 @@ void PackageManager::retrievePackages()
         defaultApps << "com.aero";
         defaultApps << "com.andate";
         defaultApps << "com.basurto";
-//        defaultApps << "com.bueno";
-//        defaultApps << "com.casa";
-//        defaultApps << "com.cosa";
-//        defaultApps << "com.crosa";
-//        defaultApps << "com.indie";
-//        defaultApps << "com.indira";
-//        defaultApps << "com.indigo";
-//        defaultApps << "com.juice";
-//        defaultApps << "com.kato";
-//        defaultApps << "com.keee";
-//        defaultApps << "com.kila";
     }
 #endif
 

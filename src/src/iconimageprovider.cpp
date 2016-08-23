@@ -36,14 +36,16 @@ QImage IconImageProvider::requestImage(const QString &id, QSize *size, const QSi
     jsize iconSize = env->GetArrayLength(iconDataArray);
 
     if (iconSize > 0) {
-        jbyte *icon = env->GetByteArrayElements(iconDataArray, false);
-        image = QImage(QImage::fromData((uchar*) icon, iconSize,"PNG"));
+        jboolean jfalse = false;
+        jbyte *icon = env->GetByteArrayElements(iconDataArray, &jfalse);
+        image = QImage::fromData((uchar*) icon, iconSize,"PNG");
         env->ReleaseByteArrayElements(iconDataArray, icon, JNI_ABORT);
     }
+
+    return image;
 #else
     Q_UNUSED(id)
     return QImage("://images/test","PNG");
 #endif
 
-    return image;
 }
