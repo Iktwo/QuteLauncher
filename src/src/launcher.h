@@ -10,7 +10,6 @@ public:
     explicit Launcher(QObject *parent = 0);
 
     Q_INVOKABLE void pickWallpaper();
-
 };
 
 #endif // LAUNCHER_H

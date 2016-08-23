@@ -1,52 +1,41 @@
 package com.iktwo.qutelauncher;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.io.ByteArrayOutputStream;
-
-import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Bundle;
-import android.graphics.drawable.Drawable;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.app.WallpaperManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.content.pm.ResolveInfo;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
+import java.util.List;
 
 public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity {
-    final int APPWIDGET_HOST_ID = 2048;
-    final int REQUEST_PICK_APPWIDGET = 0;
-    final int REQUEST_CREATE_APPWIDGET = 5;
-
     private static final String TAG = "QuteLauncher";
     private static ConnectivityManager cm;
     private static QuteLauncher m_instance;
     private static WallpaperManager wm;
     private static int mIconDpi;
-
     private static PackageManager mPm;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
+        this.QT_ANDROID_DEFAULT_THEME = "AppTheme";
+
         super.onCreate(savedInstanceState);
 
         getWindow().getDecorView().setSystemUiVisibility(
