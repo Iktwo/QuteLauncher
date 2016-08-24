@@ -53,7 +53,6 @@ ApplicationWindow {
         }
     }
 
-
     color: "#00000000"
 
     width: resolutions[currentResolution].width
@@ -90,6 +89,7 @@ ApplicationWindow {
     Timer {
         interval: 550
         running: true
+
         onTriggered: PackageManager.registerBroadcast()
     }
 
@@ -102,9 +102,14 @@ ApplicationWindow {
 
         height: ScreenValues.statusBarHeight
 
+        border {
+            left: 5 * ScreenValues.dp
+            top: 5 * ScreenValues.dp
+            right: 5 * ScreenValues.dp
+            bottom: 5 * ScreenValues.dp
+        }
+
         source: "qrc:/images/shadow"
-        border.left: 5; border.top: 5
-        border.right: 5; border.bottom: 5
     }
 
     BorderImage  {
@@ -120,8 +125,10 @@ ApplicationWindow {
         source: ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
 
         border {
-            left: 5; top: 5
-            right: 5; bottom: 5
+            left: 5 * ScreenValues.dp
+            top: 5 * ScreenValues.dp
+            right: 5 * ScreenValues.dp
+            bottom: 5 * ScreenValues.dp
         }
     }
 
@@ -155,6 +162,7 @@ ApplicationWindow {
 
     MouseArea {
         anchors.fill: parent
+
         enabled: explandableItem.busy
     }
 
@@ -209,6 +217,7 @@ ApplicationWindow {
 
     ApplicationTile {
         id: applicationTile
+
         dragTarget: applicationTile
     }
 }
