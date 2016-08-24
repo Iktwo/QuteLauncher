@@ -32,3 +32,9 @@ Makefile*
 #QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+*~
+google-services.json
+.DS_STORE
+.build
+.gradle

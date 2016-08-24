@@ -15,10 +15,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -31,17 +32,10 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     private static WallpaperManager wm;
     private static int mIconDpi;
     private static PackageManager mPm;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        this.QT_ANDROID_DEFAULT_THEME = "AppTheme";
-
-        super.onCreate(savedInstanceState);
-
-        getWindow().getDecorView().setSystemUiVisibility(
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+    public QuteLauncher() {
+        m_instance = this;
     }
 
     public static String connectionType() {
@@ -50,38 +44,17 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
         return netInfo.getTypeName();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        m_instance = this;
-
-        ActivityManager activityManager = (ActivityManager) m_instance.getSystemService(Context.ACTIVITY_SERVICE);
-        mIconDpi = activityManager.getLauncherLargeIconDensity();
-
-        mPm = (PackageManager) m_instance.getPackageManager();
-    }
-
     public static boolean isApplaunchable(String packageName) {
         return (mPm.getLaunchIntentForPackage(packageName) != null);
     }
 
-    public static int getDPI()
-    {
+    public static int getDPI() {
         DisplayMetrics dm = m_instance.getResources().getDisplayMetrics();
         return dm.densityDpi;
     }
 
-    @Override
-    protected void onDestroy() {
-        System.exit(0);
-    }
-
     public static QuteLauncher getInstance() {
         return m_instance;
-    }
-
-    public QuteLauncher() {
-        m_instance = this;
     }
 
     public static Application[] applications() {
@@ -127,9 +100,9 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
             Resources resources = mPm.getResourcesForApplication(app);
             ResolveInfo resolveInfo = mPm.resolveActivity(mPm.getLaunchIntentForPackage(packageName), 0);
             icon = resources.getDrawableForDensity(resolveInfo.activityInfo.getIconResource(), mIconDpi);
-        } catch(Exception e) {
-             Log.e(TAG, "exception getApplicationIcon for " + packageName, e);
-             icon = null;
+        } catch (Exception e) {
+            Log.e(TAG, "exception getApplicationIcon for " + packageName, e);
+            icon = null;
         }
 
         if (icon == null)
@@ -154,7 +127,7 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
             ResolveInfo resolveInfo = mPm.resolveActivity(mPm.getLaunchIntentForPackage(packageName), 0);
 
             return resolveInfo.loadLabel(mPm).toString();
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, "getApplicationLabel for " + packageName, e);
             return "";
         }
@@ -171,34 +144,65 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
         m_instance.startActivity(intent);
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        this.QT_ANDROID_DEFAULT_THEME = "AppTheme";
+
+        super.onCreate(savedInstanceState);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        m_instance = this;
+
+        ActivityManager activityManager = (ActivityManager) m_instance.getSystemService(Context.ACTIVITY_SERVICE);
+        mIconDpi = activityManager.getLauncherLargeIconDensity();
+
+        mPm = (PackageManager) m_instance.getPackageManager();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.exit(0);
+    }
+
 }
 
-class Application implements Comparable<Application>{
-        public String packageName;
-        public String name;
+class Application implements Comparable<Application> {
+    public String packageName;
+    public String name;
 
-        public Application(String name, String packageName) {
-            this.name = name;
-            this.packageName = packageName;
-        }
+    public Application(String name, String packageName) {
+        this.name = name;
+        this.packageName = packageName;
+    }
 
-        public String getName() {
-            return name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public String getPackageName() {
-            return packageName;
-        }
+    public void setName(String name2) {
+        name = name2;
+    }
 
-        public void setName(String name2) {
-            name = name2;
-        }
+    public String getPackageName() {
+        return packageName;
+    }
 
-        public void setPackageName(String packageName2) {
-            packageName = packageName2;
-        }
+    public void setPackageName(String packageName2) {
+        packageName = packageName2;
+    }
 
-        public int compareTo(Application application) {
-            return this.getName().toUpperCase().compareTo(application.getName().toUpperCase());
-        }
+    public int compareTo(Application application) {
+        return this.getName().toUpperCase().compareTo(application.getName().toUpperCase());
+    }
 }

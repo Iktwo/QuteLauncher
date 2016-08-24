@@ -1,54 +1,83 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
 import com.iktwo.qutelauncher 1.0
 
-GridView {
+ScrollView {
     id: root
 
-    property int highlightedItem
+    property alias model: gridView.model
 
     signal pressAndHold(var model)
 
-    maximumFlickVelocity: height * 2.5
+    anchors.fill: parent
 
-    header: Item {
-        width: parent.width
-        height: 20 * ScreenValues.dp
+    style: ScrollViewStyle {
+        transientScrollBars: false
+
+        scrollBarBackground: Rectangle {
+            implicitWidth: 5 * ScreenValues.dp
+
+            color: "#d9d9d9"
+        }
+
+        handle: Rectangle {
+            implicitWidth: 5 * ScreenValues.dp
+
+            color: "#129688"
+        }
+
+        corner: Item { }
+        decrementControl: Item { }
+        incrementControl: Item { }
     }
 
-    add: Transition {
-        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 450 }
-        NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 500 }
-    }
+    GridView {
+        id: gridView
 
-    displaced: Transition {
-        NumberAnimation { property: "opacity"; to: 1.0 }
-        NumberAnimation { property: "scale"; to: 1.0 }
-    }
+        property int highlightedItem
 
-    clip: true
-    interactive: visible
+        maximumFlickVelocity: height * 2.5
 
-    cellHeight: height / applicationWindow.tilesVertically
-    cellWidth: width / applicationWindow.tilesHorizontally
+        header: Item {
+            width: parent.width
+            height: 20 * ScreenValues.dp
+        }
 
-    delegate: ApplicationTile {
-        id: applicationTile
+        add: Transition {
+            NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 450 }
+            NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 500 }
+        }
 
-        height: GridView.view.cellHeight
-        width: GridView.view.cellWidth
+        displaced: Transition {
+            NumberAnimation { property: "opacity"; to: 1.0 }
+            NumberAnimation { property: "scale"; to: 1.0 }
+        }
 
-        source: "image://icon/" + model.packageName
-        text: model.name
+        clip: true
+        interactive: visible
 
-        onClicked: PackageManager.launchApplication(model.packageName)
-        onPressAndHold: root.pressAndHold(model)
-    }
+        cellHeight: height / applicationWindow.tilesVertically
+        cellWidth: width / applicationWindow.tilesHorizontally
 
-    onHeightChanged: {
-        if (cacheBuffer !== 0)
-            cacheBuffer = Math.max(1080, height * 5)
+        delegate: ApplicationTile {
+            id: applicationTile
+
+            height: GridView.view.cellHeight
+            width: GridView.view.cellWidth
+
+            source: "image://icon/" + model.packageName
+            text: model.name
+
+            onClicked: PackageManager.launchApplication(model.packageName)
+            onPressAndHold: root.pressAndHold(model)
+        }
+
+        onHeightChanged: {
+            if (cacheBuffer !== 0)
+                cacheBuffer = Math.max(1080, height * 5)
+        }
     }
 }
