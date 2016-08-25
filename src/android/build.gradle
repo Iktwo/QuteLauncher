@@ -43,6 +43,26 @@ android {
         applicationId "com.iktwo.qutelauncher"
     }
 
+    String APK_NAME = "qutelauncher"
+
+    String BUILDTYPE = ""
+
+    productFlavors {
+        full {
+
+        }
+
+        noanalytics {
+
+        }
+    }
+
+    buildTypes {
+        releaseUnsigned {
+            BUILDTYPE = "unsigned"
+        }
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -54,18 +74,47 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
        }
+
+        full {
+            java.srcDirs = ['full']
+            manifest.srcFile 'full/AndroidManifest.xml'
+        }
+
+        noanalytics {
+            java.srcDirs = ['noanalytics']
+        }
     }
 
     lintOptions {
         abortOnError false
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(
+                    output.outputFile.parent,
+                    APK_NAME + "_" + variant.productFlavors[0].name + "_"+ BUILDTYPE + ".apk")
+        }
+
+        variant.assemble.doLast {
+            variant.outputs.each { output ->
+                println "aligned " + output.outputFile
+                println "unaligned " + output.packageApplication.outputFile
+
+                File unaligned = output.packageApplication.outputFile;
+                File aligned = output.outputFile
+                if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
+                    println "deleting " + unaligned.getName()
+                    unaligned.delete()
+                }
+            }
+        }
+    }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.google.firebase:firebase-core:9.4.0'
-    compile 'com.google.firebase:firebase-messaging:9.4.0'
-    compile 'com.google.firebase:firebase-crash:9.4.0'
+    fullCompile 'com.google.firebase:firebase-core:9.4.0'
+    fullCompile 'com.android.support:appcompat-v7:24.2.0'
+    fullCompile 'com.google.firebase:firebase-messaging:9.4.0'
+    fullCompile 'com.google.firebase:firebase-crash:9.4.0'
 }
-
-apply plugin: 'com.google.gms.google-services'
