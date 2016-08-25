@@ -42,8 +42,8 @@ Item {
 
             asynchronous: true
 
-            Layout.preferredHeight: Math.round(59 * ScreenValues.dp)
-            Layout.preferredWidth: Math.round(59 * ScreenValues.dp)
+            Layout.preferredHeight: Math.round(48 * ScreenValues.dp)
+            Layout.preferredWidth: Math.round(48 * ScreenValues.dp)
 
             fillMode: Image.PreserveAspectFit
         }

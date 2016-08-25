@@ -30,6 +30,7 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     private static WallpaperManager wm;
     private static int mIconDpi;
     private static PackageManager mPm;
+    private static long qtObject = 0;
 
     public QuteLauncher() {
         m_instance = this;
@@ -141,6 +142,12 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
         m_instance.startActivity(intent);
     }
 
+    public static void setQtObject(long qtObject) {
+        QuteLauncher.qtObject = qtObject;
+    }
+
+    private static native void jnewIntent(long qtObject);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         this.QT_ANDROID_DEFAULT_THEME = "AppTheme";
@@ -162,6 +169,12 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
         mIconDpi = activityManager.getLauncherLargeIconDensity();
 
         mPm = (PackageManager) m_instance.getPackageManager();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        jnewIntent(qtObject);
     }
 
     @Override

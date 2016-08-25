@@ -10,7 +10,7 @@ Item {
     property int minimizedWidth: Math.round(48 * ScreenValues.dp)
 
     property int targetWidth: Math.round(parent.width - (getSideMargin() * ScreenValues.dp))
-    property int targetHeight: Math.round(parent.height - (44 * ScreenValues.dp))
+    property int targetHeight: Math.round(parent.height - 8 * ScreenValues.dp)
 
     property point minimizedPoint: Qt.point(Math.round(parent.width / 2), Math.round(parent.height - rectangleMinizedIndicator.height - (4 * ScreenValues.dp)))
     property point centerPoint: Qt.point(Math.round(parent.width / 2), Math.round(parent.height / 2))
@@ -92,6 +92,8 @@ Item {
                 to: "opened"
                 reversible: true
                 ParallelAnimation {
+                    PropertyAnimation { property: "y"; duration: 350; easing.type: Easing.InOutCubic }
+
                     SequentialAnimation {
                         PauseAnimation { duration: 250 }
                         ParallelAnimation {
@@ -104,8 +106,6 @@ Item {
                             }
                         }
                     }
-
-                    PropertyAnimation { property: "y"; duration: 450; easing.type: Easing.InOutCubic }
                 }
             }
         ]

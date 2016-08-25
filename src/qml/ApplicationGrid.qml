@@ -39,7 +39,7 @@ ScrollView {
 
         property int highlightedItem
 
-        maximumFlickVelocity: height * 2.5
+        maximumFlickVelocity: height * 5
 
         header: Item {
             width: parent.width
@@ -72,11 +72,11 @@ ScrollView {
             text: model.name
 
             onClicked: PackageManager.launchApplication(model.packageName)
-            onPressAndHold: root.pressAndHold(model)
+            // onPressAndHold: root.pressAndHold(model)
         }
 
         onHeightChanged: {
-            if (cacheBuffer !== 0)
+            if (height !== 0)
                 cacheBuffer = Math.max(1080, height * 5)
         }
     }

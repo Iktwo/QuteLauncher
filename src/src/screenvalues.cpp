@@ -17,6 +17,8 @@ ScreenValues::ScreenValues(QObject *parent) :
 {
     m_dpi = retrieveDpi();
 
+    m_density = retrieveDensity();
+
     m_dp = (float) m_dpi / 160;
 
     setStatusBarHeight(getResourceSize("status_bar_height"));
@@ -103,6 +105,20 @@ void ScreenValues::setIsTablet(bool isTablet)
 bool ScreenValues::navBarVisible() const
 {
     return m_navBarVisible;
+}
+
+float ScreenValues::density() const
+{
+    return m_density;
+}
+
+void ScreenValues::setDensity(float density)
+{
+    if (m_density == density)
+        return;
+
+    m_density = density;
+    emit densityChanged(density);
 }
 
 int ScreenValues::statusBarHeight() const
@@ -209,6 +225,44 @@ int ScreenValues::retrieveDpi()
     jint densityDpi = env->GetIntField(displayMetrics, fIDDensityDpi);
 
     int result = (int)densityDpi;
+
+    env->PopLocalFrame(NULL);
+
+    return result;
+#else
+    return QGuiApplication::primaryScreen()->physicalDotsPerInch();
+#endif
+}
+
+float ScreenValues::retrieveDensity()
+{
+#ifdef Q_OS_ANDROID
+    QAndroidJniEnvironment env;
+    env->PushLocalFrame(9);
+
+    QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
+                                                                           "activity",
+                                                                           "()Landroid/app/Activity;");
+    jclass activityClass = env->GetObjectClass(activity.object<jobject>());
+
+    jmethodID mIDGetResources = env->GetMethodID(activityClass,
+                                                 "getResources",
+                                                 "()Landroid/content/res/Resources;");
+
+    jobject resources = env->CallObjectMethod(activity.object<jobject>(), mIDGetResources);
+    jclass resourcesClass = env->GetObjectClass(resources);
+
+    jmethodID mIDGetDisplayMetrics = env->GetMethodID(resourcesClass,
+                                                      "getDisplayMetrics",
+                                                      "()Landroid/util/DisplayMetrics;");
+
+    jobject displayMetrics = env->CallObjectMethod(resources, mIDGetDisplayMetrics);
+    jclass displayMetricsClass = env->GetObjectClass(displayMetrics);
+
+    jfieldID fIDDensityDpi = env->GetFieldID(displayMetricsClass, "density", "F");
+    jfloat densityDpi = env->GetFloatField(displayMetrics, fIDDensityDpi);
+
+    float result = (float)densityDpi;
 
     env->PopLocalFrame(NULL);
 
