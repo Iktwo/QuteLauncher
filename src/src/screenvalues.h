@@ -13,6 +13,7 @@ class ScreenValues : public QObject
     Q_PROPERTY(int navigationBarHeightLandscape READ navigationBarHeightLandscape NOTIFY navigationBarHeightLandscapeChanged)
     Q_PROPERTY(int dpi READ dpi WRITE setDpi NOTIFY dpiChanged)
     Q_PROPERTY(float dp READ dp WRITE setDp NOTIFY dpChanged)
+    Q_PROPERTY(float density READ density NOTIFY densityChanged)
     Q_PROPERTY(bool isTablet READ isTablet NOTIFY isTabletChanged)
     Q_PROPERTY(bool navBarVisible READ navBarVisible NOTIFY navBarVisibleChanged)
 
@@ -23,6 +24,9 @@ public:
 
     float dp() const;
     void setDp(float dp);
+
+    float density() const;
+    void setDensity(float density);
 
     int dpi() const;
     void setDpi(int dpi);
@@ -47,9 +51,12 @@ signals:
     void isTabletChanged();
     void navBarVisibleChanged();
 
+    void densityChanged(float density);
+
 private:
     System m_system;
     float m_dp;
+    float m_density;
     int m_dpi;
     int m_statusBarHeight;
     int m_navigationBarHeight;
@@ -57,6 +64,7 @@ private:
     bool m_isTablet;
     bool m_navBarVisible;
 
+    float retrieveDensity();
     int retrieveDpi();
     int getResourceSize(const QString &resource);
 

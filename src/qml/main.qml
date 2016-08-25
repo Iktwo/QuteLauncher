@@ -90,7 +90,10 @@ ApplicationWindow {
         interval: 550
         running: true
 
-        onTriggered: PackageManager.registerBroadcast()
+        onTriggered: {
+            Launcher.registerMethods()
+            PackageManager.registerBroadcast()
+        }
     }
 
     BorderImage  {
@@ -219,5 +222,10 @@ ApplicationWindow {
         id: applicationTile
 
         dragTarget: applicationTile
+    }
+
+    Connections {
+        target: Launcher
+        onNewIntentReceived: explandableItem.close()
     }
 }

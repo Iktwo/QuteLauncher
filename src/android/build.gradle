@@ -89,11 +89,18 @@ android {
         abortOnError false
     }
 
+    assembleRelease.doLast {
+
+    }
+
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.outputFile = new File(
                     output.outputFile.parent,
-                    APK_NAME + "_" + variant.productFlavors[0].name + "_"+ BUILDTYPE + ".apk")
+                    "android-build-release-unsigned.apk")
+
+                    // TODO: figure out how to fix this
+                    // APK_NAME + "_" + variant.productFlavors[0].name + "_"+ BUILDTYPE + ".apk")
         }
 
         variant.assemble.doLast {
