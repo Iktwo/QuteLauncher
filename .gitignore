@@ -38,3 +38,7 @@ google-services.json
 .DS_STORE
 .build
 .gradle
+.idea
+gen
+gradle.properties
+android.iml
