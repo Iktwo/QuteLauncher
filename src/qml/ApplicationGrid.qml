@@ -72,7 +72,7 @@ ScrollView {
             text: model.name
 
             onClicked: PackageManager.launchApplication(model.packageName)
-            // onPressAndHold: root.pressAndHold(model)
+            onPressAndHold: root.pressAndHold(model)
         }
 
         onHeightChanged: {

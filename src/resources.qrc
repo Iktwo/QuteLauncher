@@ -5,6 +5,9 @@
         <file>qml/ExpandableItem.qml</file>
         <file>qml/ApplicationTile.qml</file>
         <file>qml/IntroView.qml</file>
+        <file>qml/config/qmldir</file>
+        <file>qml/config/Theme.qml</file>
+        <file>qml/config/Dimensions.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="test">resources/images/test.png</file>
