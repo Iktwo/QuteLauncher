@@ -83,6 +83,8 @@ FocusScope {
 
         snapMode: ListView.SnapToItem
 
+        boundsBehavior: Flickable.StopAtBounds
+
         onContentXChanged: {
             if (previousX > contentX)
                 movingLeft = true
@@ -95,7 +97,7 @@ FocusScope {
         highlightRangeMode: ListView.StrictlyEnforceRange
 
         preferredHighlightBegin: 0
-        preferredHighlightEnd: width / 2
+        preferredHighlightEnd: width
 
         delegate: Rectangle {
             height: ListView.view.height

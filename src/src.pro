@@ -16,6 +16,8 @@ android {
         android/AndroidManifest.xml
 }
 
+QML_IMPORT_PATH = $$PWD/qml
+
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 HEADERS += $$files($$PWD/src/*.h)

@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.2
 import com.iktwo.qutelauncher 1.0
+import config 1.0 as Config
 
 ApplicationWindow {
     id: applicationWindow
@@ -106,10 +107,10 @@ ApplicationWindow {
         height: ScreenValues.statusBarHeight
 
         border {
-            left: 5 * ScreenValues.dp
-            top: 5 * ScreenValues.dp
-            right: 5 * ScreenValues.dp
-            bottom: 5 * ScreenValues.dp
+            left: Config.Dimensions.navbarShadowBorderSize
+            top: Config.Dimensions.navbarShadowBorderSize
+            right: Config.Dimensions.navbarShadowBorderSize
+            bottom: Config.Dimensions.navbarShadowBorderSize
         }
 
         source: "qrc:/images/shadow"
@@ -128,10 +129,10 @@ ApplicationWindow {
         source: ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
 
         border {
-            left: 5 * ScreenValues.dp
-            top: 5 * ScreenValues.dp
-            right: 5 * ScreenValues.dp
-            bottom: 5 * ScreenValues.dp
+            left: Config.Dimensions.navbarShadowBorderSize
+            top: Config.Dimensions.navbarShadowBorderSize
+            right: Config.Dimensions.navbarShadowBorderSize
+            bottom: Config.Dimensions.navbarShadowBorderSize
         }
     }
 
@@ -154,8 +155,9 @@ ApplicationWindow {
                 anchors.fill: parent
 
                 onPressAndHold: {
-                    applicationTile.source = "image://icon/" + model.packageName
-                    applicationTile.text = model.name
+                    /// TODO: implement this
+                    // applicationTile.source = "image://icon/" + model.packageName
+                    // applicationTile.text = model.name
 
                     explandableItem.close()
                 }

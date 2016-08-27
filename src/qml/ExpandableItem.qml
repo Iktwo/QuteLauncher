@@ -1,5 +1,6 @@
 import QtQuick 2.5
 import com.iktwo.qutelauncher 1.0
+import config 1.0 as Config
 
 Item {
     default property alias content: itemContainer.data
@@ -39,7 +40,7 @@ Item {
     Rectangle {
         id: rectangleMinizedIndicator
 
-        color: "#f5f5f5"
+        color: Config.Theme.colorGridContainer
 
         width: minimizedWidth
         height: minimizedHeight
@@ -92,14 +93,14 @@ Item {
                 to: "opened"
                 reversible: true
                 ParallelAnimation {
-                    PropertyAnimation { property: "y"; duration: 350; easing.type: Easing.InOutCubic }
+                    PropertyAnimation { property: "y"; duration: 275; easing.type: Easing.InOutCubic }
 
                     SequentialAnimation {
-                        PauseAnimation { duration: 250 }
+                        PauseAnimation { duration: 50 }
                         ParallelAnimation {
-                            PropertyAnimation { target: rectangleMinizedIndicator; properties: "height, width"; easing.type: Easing.InOutCubic }
-                            PropertyAnimation { target: rectangleMinizedIndicator; property: "radius"; easing.type: Easing.InOutCubic }
-                            PropertyAnimation { target: rectangleMinizedIndicator; property: "x"; easing.type: Easing.InOutCubic }
+                            PropertyAnimation { target: rectangleMinizedIndicator; properties: "height, width"; easing.type: Easing.InOutCubic; duration: 250 }
+                            PropertyAnimation { target: rectangleMinizedIndicator; property: "radius"; easing.type: Easing.InOutCubic; duration: 250 }
+                            PropertyAnimation { target: rectangleMinizedIndicator; property: "x"; easing.type: Easing.InOutCubic; duration: 250 }
                             SequentialAnimation {
                                 PauseAnimation { duration: 150 }
                                 PropertyAnimation { target: itemContainer; property: "opacity"; easing.type: Easing.InOutCubic}
@@ -114,7 +115,10 @@ Item {
     Item {
         id: itemContainer
 
-        anchors.centerIn: rectangleMinizedIndicator
+        anchors {
+            right: rectangleMinizedIndicator.right; rightMargin: -ScreenValues.dp
+            verticalCenter: rectangleMinizedIndicator.verticalCenter
+        }
 
         width: targetWidth
         height: targetHeight
