@@ -23,6 +23,10 @@ Item {
         stateGroup.state = "closed"
     }
 
+    function open() {
+        stateGroup.state = "opened"
+    }
+
     function getSideMargin() {
         if (applicationWindow.isScreenPortrait) {
             if (ScreenValues.isTablet)
@@ -133,12 +137,6 @@ Item {
         anchors.fill: rectangleMinizedIndicator
         enabled: stateGroup.state === "closed"
 
-        onClicked: {
-            if (stateGroup.state === "closed") {
-                stateGroup.state = "opened"
-            } else {
-                stateGroup.state = "closed"
-            }
-        }
+        onClicked: open()
     }
 }
