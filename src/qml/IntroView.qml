@@ -1,8 +1,11 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
+import com.iktwo.qutelauncher 1.0 as QL
 
 FocusScope {
+    id: root
+
     property alias currentIndex: listView.currentIndex
     property alias model: listView.model
     property alias progress: animationController.progress
@@ -13,8 +16,13 @@ FocusScope {
     property alias rectangleDividerHeight: rectangleDivider.height
     property alias dragging: listView.dragging
 
+    property int navbarMargin
+    property int statusbarMargin
+
     readonly property double xPosition: (listView.contentX / listView.width)
     readonly property bool movingLeft: listView.movingLeft
+
+    signal done
 
     onXPositionChanged:  {
         if (currentIndex < 0)
@@ -61,7 +69,7 @@ FocusScope {
 
         anchors.fill: parent
 
-        ColorAnimation on color { }
+        ColorAnimation on color { duration: 325 }
     }
 
     ListView {
@@ -98,16 +106,31 @@ FocusScope {
 
         preferredHighlightBegin: 0
         preferredHighlightEnd: width
+        cacheBuffer: width * 3
+        maximumFlickVelocity: width * 2
 
-        delegate: Rectangle {
+        delegate: Item {
             height: ListView.view.height
             width: ListView.view.width
 
-            color: "transparent"
+            Loader {
+                id: loader
 
-            border {
-                color: "black"
-                width: 1
+                anchors {
+                    fill: parent
+                    topMargin: statusbarMargin
+                    bottomMargin: navbarMargin
+                }
+
+                source: "intro/" + model.name
+            }
+
+            Connections {
+                target: loader.item
+
+                ignoreUnknownSignals: true
+
+                onDone: root.done()
             }
         }
     }
@@ -118,10 +141,10 @@ FocusScope {
         anchors {
             left: parent.left
             right: parent.right
-            bottom: parent.bottom
+            bottom: parent.bottom; bottomMargin: root.navbarMargin
         }
 
-        height: 57
+        height: 56 * QL.ScreenValues.dp
 
         Rectangle {
             id: rectangleDivider
@@ -131,9 +154,83 @@ FocusScope {
                 right: parent.right
             }
 
-            height: 1
+            height: 1 * QL.ScreenValues.dp
 
             color: "#44ffffff"
+        }
+
+        Row {
+            anchors.centerIn: parent
+
+            spacing: 8 * QL.ScreenValues.dp
+
+            Repeater {
+                model: root.model.count
+
+                Item {
+                    height: 16 * QL.ScreenValues.dp
+                    width: height
+
+                    Rectangle {
+                        id: rectangleIndicator
+
+                        property bool active: index === listView.currentIndex
+
+                        anchors.centerIn: parent
+
+                        height: 10 * QL.ScreenValues.dp
+                        width: height
+                        radius: height
+                        opacity: active ? 1 : 0.6
+
+                        state: "inactive"
+                        states: [
+                            State {
+                                name: "active"
+                                when: rectangleIndicator.active
+
+                                PropertyChanges {
+                                    target: rectangleIndicator
+                                    height: 16 * QL.ScreenValues.dp
+                                    width: 16 * QL.ScreenValues.dp
+                                }
+                            },
+                            State {
+                                name: "inactive"
+                                when: !rectangleIndicator.active
+
+                                PropertyChanges {
+                                    target: rectangleIndicator
+                                    height: 10 * QL.ScreenValues.dp
+                                    width: 10 * QL.ScreenValues.dp
+                                }
+                            }
+                        ]
+
+                        transitions: [
+                            Transition {
+                                from: "active"
+                                to: "inactive"
+                                reversible: true
+
+                                ParallelAnimation {
+                                    NumberAnimation {
+                                        property: "height"
+                                        duration: 175
+                                        easing.type: Easing.OutQuad
+                                    }
+
+                                    NumberAnimation {
+                                        property: "width"
+                                        duration: 175
+                                        easing.type: Easing.OutQuad
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
         }
     }
 

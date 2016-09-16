@@ -1,8 +1,9 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.2
-import com.iktwo.qutelauncher 1.0
+import com.iktwo.qutelauncher 1.0 as QL
 import config 1.0 as Config
+import debug 1.0 as D
 
 ApplicationWindow {
     id: applicationWindow
@@ -20,70 +21,74 @@ ApplicationWindow {
     ]
 
     property int currentResolution: 3
-    property bool isScreenPortrait: height >= width
+
     property bool activeScreen: Qt.application.state === Qt.ApplicationActive
 
-    property int tilesHorizontally: getNumberOfTilesHorizontally(isScreenPortrait)
-    property int tilesVertically: getNumberOfTilesVertically(isScreenPortrait)
+    function updatePortraitMode() {
+        if (height >= width)
+            Config.Theme.portrait = true
+        else
+            Config.Theme.portrait = true
+    }
 
-    function getNumberOfTilesHorizontally(isScreenPortrait) {
-        if (isScreenPortrait) {
-            if (ScreenValues.isTablet) {
-                return 5
-            } else {
-                return 4
-            }
-        } else {
-            if (ScreenValues.isTablet) {
-                return 6
-            } else {
-                return 4
-            }
+    function getScreenDensityConfiguration(density) {
+        switch(density) {
+        case 420:
+            return "xxhigh"
+        case 480:
+            return "xxhigh"
+        case 560:
+            return "xxxhigh"
+        case 640:
+            return "xxxhigh"
         }
     }
 
-    function getNumberOfTilesVertically(isScreenPortrait) {
-        if (isScreenPortrait) {
-            return 6
-        } else {
-            if (ScreenValues.isTablet) {
-                return 5
-            } else {
-                return 4
-            }
-        }
-    }
-
-    color: "#00000000"
+    color: Config.Theme.colorApplicationWindow
 
     width: resolutions[currentResolution].width
     height: resolutions[currentResolution].height
 
     visible: true
 
+    onWidthChanged: updatePortraitMode()
+    onHeightChanged: updatePortraitMode()
+
     onActiveScreenChanged: {
         if (activeScreen)
-            ScreenValues.updateScreenValues()
+            QL.ScreenValues.updateScreenValues()
+    }
+
+    Component.onCompleted: {
+        Config.Theme.tablet = QL.ScreenValues.isTablet
     }
 
     FocusScope {
-        id: backKeyHandler
+        id: keyHandler
 
         height: 1
         width: 1
 
         focus: true
 
-        Keys.onAsteriskPressed: {
-            if (explandableItem.isOpened) {
-                explandableItem.close()
+        Keys.onBackPressed: {
+            if (loaderMainTheme.item && loaderMainTheme.item.opened) {
+                QL.Launcher.minimize()
             }
         }
 
-        Keys.onBackPressed: {
-            if (explandableItem.isOpened) {
+        Keys.onUpPressed: {
+            if (Qt.platform.os !== "android")
+                explandableItem.open()
+
+            event.accepted = false
+        }
+
+        Keys.onDownPressed: {
+            if (Qt.platform.os !== "android")
                 explandableItem.close()
-            }
+
+            event.accepted = false
         }
     }
 
@@ -92,31 +97,61 @@ ApplicationWindow {
         running: true
 
         onTriggered: {
-            Launcher.registerMethods()
-            PackageManager.registerBroadcast()
+            QL.Launcher.registerMethods()
+            QL.PackageManager.registerBroadcast()
         }
     }
 
-    BorderImage  {
+    Loader {
+        id: loader
+
+        function unload() {
+            sourceComponent = null
+        }
+
+        anchors.fill: parent
+
+        /// TODO: load only if this has never been displayed
+        // sourceComponent: introView
+
+        Component {
+            id: introView
+
+            IntroView {
+                anchors.fill: parent
+
+                statusbarMargin: QL.ScreenValues.statusBarHeight
+                navbarMargin: QL.ScreenValues.navBarVisible ? QL.ScreenValues.navigationBarHeight : 0
+
+                //        enabled: false
+                //        visible: false
+
+                model: ListModel {
+                    ListElement { name: "IntroMain.qml"; backgroundColor: "#424242" }
+                    ListElement { name: "IntroEnd.qml"; backgroundColor: "#2c3e50" }
+                }
+
+                onDone: loader.unload()
+            }
+        }
+
+    }
+
+    Image  {
         anchors {
             left: parent.left
             right: parent.right
             top: parent.top
         }
 
-        height: ScreenValues.statusBarHeight
+        height: QL.ScreenValues.statusBarHeight
 
-        border {
-            left: Config.Dimensions.navbarShadowBorderSize
-            top: Config.Dimensions.navbarShadowBorderSize
-            right: Config.Dimensions.navbarShadowBorderSize
-            bottom: Config.Dimensions.navbarShadowBorderSize
-        }
+        fillMode: Image.Tile
 
         source: "qrc:/images/shadow"
     }
 
-    BorderImage  {
+    Image  {
         id: borderImageNavBar
 
         anchors {
@@ -125,109 +160,30 @@ ApplicationWindow {
             bottom: parent.bottom
         }
 
-        height: ScreenValues.navBarVisible ? ScreenValues.navigationBarHeight : 0
-        source: ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
+        height: QL.ScreenValues.navBarVisible ? QL.ScreenValues.navigationBarHeight : 0
 
-        border {
-            left: Config.Dimensions.navbarShadowBorderSize
-            top: Config.Dimensions.navbarShadowBorderSize
-            right: Config.Dimensions.navbarShadowBorderSize
-            bottom: Config.Dimensions.navbarShadowBorderSize
-        }
+        fillMode: Image.Tile
+
+        source: QL.ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
     }
 
-    Item {
-        anchors {
-            top: parent.top; topMargin: ScreenValues.statusBarHeight
-            bottom: borderImageNavBar.top
-            left: parent.left
-            right: parent.right
-        }
+    Loader {
+        id: loaderMainTheme
 
-        ExpandableItem {
-            id: explandableItem
-
-            anchors.fill: parent
-
-            ApplicationGrid {
-                model: PackageManager
-
-                anchors.fill: parent
-
-                onPressAndHold: {
-                    /// TODO: implement this
-                    // applicationTile.source = "image://icon/" + model.packageName
-                    // applicationTile.text = model.name
-
-                    explandableItem.close()
-                }
-            }
-        }
-    }
-
-    MouseArea {
         anchors.fill: parent
-
-        enabled: explandableItem.busy
+        source: "themes/classic/ThemeMain.qml"
     }
 
-    IntroView {
-        anchors.fill: parent
-
-        enabled: false
-        visible: false
-
-        model: ListModel {
-            ListElement { backgroundColor: "#1abd9c" }
-            ListElement { backgroundColor: "#2fcd72" }
-        }
-    }
-
-    GridView {
-        /// TODO: verify in landscape mode
-        anchors {
-            top: parent.top; topMargin: ScreenValues.statusBarHeight
-            left: parent.left
-            right: parent.right
-        }
-
-        height: 4 * (80 * ScreenValues.dp)
-        model: 16
-        interactive: false
-        cellHeight: height / 4
-        cellWidth: width / 4
-
-        delegate: DropArea {
-            width: GridView.view.cellWidth
-            height: GridView.view.cellHeight
-        }
-    }
-
-    Row {
-        id: rowFavorites
-
-        anchors.bottom: borderImageNavBar.top
-
-        height: 80 * ScreenValues.dp
-
-        Repeater {
-            model: 5
-
-            DropArea {
-                width: 80 * ScreenValues.dp
-                height: 80 * ScreenValues.dp
-            }
-        }
-    }
-
-    ApplicationTile {
-        id: applicationTile
-
-        dragTarget: applicationTile
-    }
-
-    Connections {
-        target: Launcher
-        onNewIntentReceived: explandableItem.close()
-    }
+    //    D.Debug {
+    //        debugData: {
+    //            'sdkInt': QL.System.sdkInt,
+    //                    'height': applicationWindow.height,
+    //                    'width': applicationWindow.width,
+    //                    'dp': QL.ScreenValues.dp.toFixed(2),
+    //                    'dpi': QL.ScreenValues.dpi.toFixed(2),
+    //                    'density': QL.ScreenValues.density.toFixed(2),
+    //                    'isTablet': QL.ScreenValues.isTablet,
+    //                    'navBarVisible': QL.ScreenValues.navBarVisible
+    //        }
+    //    }
 }
