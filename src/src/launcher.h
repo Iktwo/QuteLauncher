@@ -16,9 +16,11 @@ public:
     Q_INVOKABLE void pickWallpaper();
     Q_INVOKABLE void emitNewIntent();
     Q_INVOKABLE void registerMethods();
+    Q_INVOKABLE void minimize();
 
 signals:
     void newIntentReceived();
+    void minimized();
 
 private:
     void registerNativeMethods();

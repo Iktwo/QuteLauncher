@@ -38,6 +38,11 @@ void Launcher::registerMethods()
     registerNativeMethods();
 }
 
+void Launcher::minimize()
+{
+    emit minimized();
+}
+
 void Launcher::registerNativeMethods()
 {
 #ifdef Q_OS_ANDROID
