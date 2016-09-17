@@ -44,7 +44,7 @@ ScrollView {
 
         header: Item {
             width: parent.width
-            height: 20 * ScreenValues.dp
+            height: 20 * QL.ScreenValues.dp
         }
 
         add: Transition {
