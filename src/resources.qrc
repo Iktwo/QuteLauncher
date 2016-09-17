@@ -13,6 +13,17 @@
         <file>qml/themes/classic/ApplicationGrid.qml</file>
         <file>qml/themes/classic/ExpandableItem.qml</file>
         <file>qml/themes/classic/ApplicationTile.qml</file>
+        <file>qml/themes/tiles/ThemeMain.qml</file>
+        <file>qml/themes/tiles/ApplicationGrid.qml</file>
+        <file>qml/themes/tiles/ApplicationList.qml</file>
+        <file>qml/themes/tiles/ApplicationMenu.qml</file>
+        <file>qml/themes/tiles/ColorPicker.qml</file>
+        <file>qml/themes/tiles/PressAndHoldMenu.qml</file>
+        <file>qml/themes/tiles/SectionNavigator.qml</file>
+        <file>qml/themes/tiles/MenuItem.qml</file>
+        <file>qml/themes/tiles/ApplicationSection.qml</file>
+        <file>qml/themes/tiles/Configuration.qml</file>
+        <file>qml/themes/tiles/qmldir</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="test">resources/images/test.png</file>
