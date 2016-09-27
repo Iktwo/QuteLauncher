@@ -42,3 +42,4 @@ google-services.json
 gen
 gradle.properties
 android.iml
+build-src*
