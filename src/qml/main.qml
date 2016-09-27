@@ -103,6 +103,13 @@ ApplicationWindow {
     }
 
     Loader {
+        id: loaderMainTheme
+
+        anchors.fill: parent
+        source: "themes/tiles/ThemeMain.qml"
+    }
+
+    Loader {
         id: loader
 
         function unload() {
@@ -111,8 +118,7 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        /// TODO: load only if this has never been displayed
-        // sourceComponent: introView
+        sourceComponent: !QL.ApplicationInfo.hasShownInitialDialog ? introView : undefined
 
         Component {
             id: introView
@@ -131,7 +137,10 @@ ApplicationWindow {
                     ListElement { name: "IntroEnd.qml"; backgroundColor: "#2c3e50" }
                 }
 
-                onDone: loader.unload()
+                onDone: {
+                    QL.ApplicationInfo.hasShownInitialDialog = true
+                    loader.unload()
+                }
             }
         }
 
@@ -165,13 +174,6 @@ ApplicationWindow {
         fillMode: Image.Tile
 
         source: QL.ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
-    }
-
-    Loader {
-        id: loaderMainTheme
-
-        anchors.fill: parent
-        source: "themes/classic/ThemeMain.qml"
     }
 
     //    D.Debug {
