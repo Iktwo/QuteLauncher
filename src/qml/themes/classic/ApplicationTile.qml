@@ -13,7 +13,7 @@ Item {
     property var _originalParent
     property var _newParent
 
-    signal pressAndHold(var model)
+    signal pressAndHold(var model, int x, int y)
     signal clicked
 
     Drag.active: mouseArea.drag.active
@@ -76,7 +76,11 @@ Item {
         drag.target: root.dragTarget
 
         onClicked: root.clicked()
-        onPressAndHold: root.pressAndHold(model)
+
+        onPressAndHold: {
+            var mappedItem = mapToItem(loaderMainTheme, mouse.x, mouse.y)
+            root.pressAndHold(model, mappedItem.x, mappedItem.y)
+        }
 
         onReleased: root._newParent = (root.Drag.target !== null ? root.Drag.target : root._originalParent)
 

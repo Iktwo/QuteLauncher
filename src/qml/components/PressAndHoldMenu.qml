@@ -7,10 +7,22 @@ Item {
     property int expandedHeight: 300
     property int menuXPosition: width / 2
     property int menuYPosition: height / 2
+    property int screenHeight
+
     default property alias content: container.children
 
-    function open(yPosition, xPosition) {
+    signal closed
+    signal canceled
+
+    function open(xPosition, yPosition) {
         /// TODO: add some y offset so it's not oppened under the finger
+        if (yPosition === undefined) {
+            yPosition = screenHeight / 2
+        }
+
+        if (xPosition === undefined) {
+            xPosition = 0
+        }
 
         if (xPosition < width * 0.15)
             menuXPosition = width * 0.15
@@ -32,6 +44,11 @@ Item {
         background.state = "closed"
     }
 
+    function cancel() {
+        background.state = "closed"
+        root.canceled()
+    }
+
     anchors.fill: parent
 
     Rectangle {
@@ -45,7 +62,7 @@ Item {
 
         enabled: background.state != "closed"
 
-        onClicked: root.close()
+        onClicked: root.cancel()
     }
 
     Rectangle {

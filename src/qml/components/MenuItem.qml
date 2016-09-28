@@ -24,10 +24,13 @@ Item {
 
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
+
         font {
             pointSize: 22
         }
-        //transform: Rotation { origin.x: 0; origin.y: textElement.height / 2; axis { x: 0; y: 1; z: 0 } angle: mouseArea.pressed ? 0 : 45 }
+
+        transform: Rotation { origin.x: 0; origin.y: textElement.height / 2; axis { x: 0; y: 1; z: 0 } angle: mouseArea.pressed ? -10 : 0 }
+
         scale: mouseArea.pressed ? 0.98 : 1
         color: root.enabled ? "black" : "#8d8d8d"
     }
@@ -41,7 +44,12 @@ Item {
 
         onClicked: {
             root.clicked()
-            root.parent.close()
+
+            try {
+                root.parent.close()
+            } catch (e) {
+                console.log("MenuItem is meant to be used inside a PressAndHoldMenu")
+            }
         }
     }
 }

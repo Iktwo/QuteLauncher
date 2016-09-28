@@ -106,7 +106,7 @@ ApplicationWindow {
         id: loaderMainTheme
 
         anchors.fill: parent
-        source: "themes/tiles/ThemeMain.qml"
+        source: "themes/classic/ThemeMain.qml"
     }
 
     Loader {

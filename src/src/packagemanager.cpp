@@ -254,7 +254,7 @@ void PackageManager::retrievePackages()
         ++i;
     }
 
-    qDebug() << "mApplications:" << mApplications;
+    // qDebug() << "mApplications:" << mApplications;
 
     endResetModel();
     emit sectionsChanged();
