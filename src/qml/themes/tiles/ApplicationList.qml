@@ -91,7 +91,7 @@ Item {
                     var mappedItem = mapToItem(root, mouse.x, mouse.y)
                     menu.packageName = model.packageName
                     menu.name = model.name
-                    menu.open(mappedItem.y, mouse.x)
+                    menu.open(mouse.x, mappedItem.y)
                 }
             }
         }

@@ -39,8 +39,9 @@ Item {
                     /// TODO: implement this
                     // applicationTile.source = "image://icon/" + model.packageName
                     // applicationTile.text = model.name
-
-                    explandableItem.close()
+                    applicationGridMenu.packageName = model.packageName
+                    applicationGridMenu.name = model.name
+                    applicationGridMenu.open(x, y)
                 }
             }
         }
@@ -96,5 +97,14 @@ Item {
         target: QL.Launcher
         onNewIntentReceived: explandableItem.close()
         onMinimized: explandableItem.close()
+    }
+
+
+    ApplicationGridMenu {
+        id: applicationGridMenu
+
+        screenHeight: root.height
+
+        onClosed: explandableItem.close()
     }
 }

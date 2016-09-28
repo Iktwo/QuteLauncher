@@ -11,7 +11,7 @@ ScrollView {
 
     property alias model: gridView.model
 
-    signal pressAndHold(var model)
+    signal pressAndHold(var model, int x, int y)
 
     anchors.fill: parent
 
@@ -34,6 +34,9 @@ ScrollView {
         decrementControl: Item { }
         incrementControl: Item { }
     }
+
+    flickableItem.focus: true
+    flickableItem.interactive: true
 
     GridView {
         id: gridView
@@ -73,7 +76,7 @@ ScrollView {
             text: model.name
 
             onClicked: QL.PackageManager.launchApplication(model.packageName)
-            onPressAndHold: root.pressAndHold(model)
+            onPressAndHold: root.pressAndHold(model, x, y)
         }
 
         onHeightChanged: {
