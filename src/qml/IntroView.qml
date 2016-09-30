@@ -110,8 +110,16 @@ FocusScope {
         maximumFlickVelocity: width * 2
 
         delegate: Item {
+            property int parentIndex: listView.currentIndex
+
             height: ListView.view.height
             width: ListView.view.width
+
+            onParentIndexChanged: {
+                if (parentIndex === index + 1) {
+                    loader.item.next()
+                }
+            }
 
             Loader {
                 id: loader

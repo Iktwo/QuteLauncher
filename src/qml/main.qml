@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.2
+import Qt.labs.settings 1.0
 import com.iktwo.qutelauncher 1.0 as QL
 import config 1.0 as Config
 import debug 1.0 as D
@@ -23,6 +24,8 @@ ApplicationWindow {
     property int currentResolution: 3
 
     property bool activeScreen: Qt.application.state === Qt.ApplicationActive
+
+    property string currentTheme
 
     function updatePortraitMode() {
         if (height >= width)
@@ -63,35 +66,6 @@ ApplicationWindow {
         Config.Theme.tablet = QL.ScreenValues.isTablet
     }
 
-    FocusScope {
-        id: keyHandler
-
-        height: 1
-        width: 1
-
-        focus: true
-
-        Keys.onBackPressed: {
-            if (loaderMainTheme.item && loaderMainTheme.item.opened) {
-                QL.Launcher.minimize()
-            }
-        }
-
-        Keys.onUpPressed: {
-            if (Qt.platform.os !== "android")
-                explandableItem.open()
-
-            event.accepted = false
-        }
-
-        Keys.onDownPressed: {
-            if (Qt.platform.os !== "android")
-                explandableItem.close()
-
-            event.accepted = false
-        }
-    }
-
     Timer {
         interval: 550
         running: true
@@ -102,11 +76,28 @@ ApplicationWindow {
         }
     }
 
+    Component {
+        id: componentSettings
+
+        Item {
+
+        }
+    }
+
+    Settings {
+        property string theme
+
+        onThemeChanged: currentTheme = theme
+    }
+
     Loader {
         id: loaderMainTheme
 
         anchors.fill: parent
-        source: "themes/classic/ThemeMain.qml"
+
+        focus: true
+
+        source: currentTheme !== "" ? ("themes/" + currentTheme + "/ThemeMain.qml") : undefined
     }
 
     Loader {
@@ -118,7 +109,15 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        sourceComponent: !QL.ApplicationInfo.hasShownInitialDialog ? introView : undefined
+        sourceComponent: !QL.ApplicationInfo.hasShownInitialDialog ? introView : componentSettings
+
+        focus: true
+
+        Keys.onBackPressed: {
+            if (loaderMainTheme.item && loaderMainTheme.item.opened) {
+                QL.Launcher.minimize()
+            }
+        }
 
         Component {
             id: introView
@@ -129,21 +128,19 @@ ApplicationWindow {
                 statusbarMargin: QL.ScreenValues.statusBarHeight
                 navbarMargin: QL.ScreenValues.navBarVisible ? QL.ScreenValues.navigationBarHeight : 0
 
-                //        enabled: false
-                //        visible: false
-
                 model: ListModel {
                     ListElement { name: "IntroMain.qml"; backgroundColor: "#424242" }
-                    ListElement { name: "IntroEnd.qml"; backgroundColor: "#2c3e50" }
+                    ListElement { name: "IntroSelection.qml"; backgroundColor: "#2c3e50" }
+                    ListElement { name: "IntroEnd.qml"; backgroundColor: "#424242" }
                 }
 
                 onDone: {
                     QL.ApplicationInfo.hasShownInitialDialog = true
                     loader.unload()
+                    loader.sourceComponent = componentSettings
                 }
             }
         }
-
     }
 
     Image  {

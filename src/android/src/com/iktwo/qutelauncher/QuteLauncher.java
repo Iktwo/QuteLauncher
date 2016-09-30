@@ -88,11 +88,8 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     }
 
     public static byte[] getApplicationIcon(String packageName) {
-        // Log.d(TAG, "TRYING TO GET ICON FOR: " + packageName);
-
         Drawable icon;
 
-        /// Get application icon
         try {
             ApplicationInfo app = mPm.getApplicationInfo(packageName, 0);
             Resources resources = mPm.getResourcesForApplication(app);
