@@ -29,7 +29,7 @@ Item {
             bottom: parent.bottom
         }
 
-        cacheBuffer: height * 9
+        cacheBuffer: height >= 0 ? (height * 9) : root.height
         maximumFlickVelocity: root.height * 2.5
 
         section {
@@ -133,6 +133,7 @@ Item {
 
         Image {
             anchors.fill: parent
+
             antialiasing: true
             /// TODO: verify this
             source: "qrc:/images/menu"

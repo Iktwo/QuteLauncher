@@ -13,7 +13,6 @@ public class PackageChangedReceiver extends BroadcastReceiver {
         final String packageName = intent.getData().getSchemeSpecificPart();
 
         if (packageName == null || packageName.length() == 0) {
-            // they sent us a bad intent
             return;
         }
 

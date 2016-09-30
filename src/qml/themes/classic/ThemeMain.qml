@@ -1,13 +1,29 @@
 import QtQuick 2.0
 import com.iktwo.qutelauncher 1.0 as QL
 
-Item {
+FocusScope {
     id: root
 
     property int navbarMargin: QL.ScreenValues.navBarVisible ? QL.ScreenValues.navigationBarHeight : 0
     property int statusbarMargin: QL.ScreenValues.statusBarHeight
 
     property bool opened: explandableItem.isOpened
+
+    focus: true
+
+    Keys.onUpPressed: {
+        if (Qt.platform.os !== "android")
+            explandableItem.open()
+
+        event.accepted = false
+    }
+
+    Keys.onDownPressed: {
+        if (Qt.platform.os !== "android")
+            explandableItem.close()
+
+        event.accepted = false
+    }
 
     MouseArea {
         anchors.fill: parent
