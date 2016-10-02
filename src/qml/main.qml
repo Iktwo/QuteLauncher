@@ -97,7 +97,7 @@ ApplicationWindow {
 
         focus: true
 
-        source: currentTheme !== "" ? ("themes/" + currentTheme + "/ThemeMain.qml") : undefined
+        source: currentTheme !== "" ? ("themes/" + currentTheme + "/ThemeMain.qml") : ""
     }
 
     Loader {
@@ -109,7 +109,7 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        sourceComponent: !QL.ApplicationInfo.hasShownInitialDialog ? introView : componentSettings
+        sourceComponent: !QL.ApplicationInfo.hasShownInitialDialog || currentTheme === "" ? introView : componentSettings
 
         focus: true
 
