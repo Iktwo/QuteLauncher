@@ -25,8 +25,6 @@ ApplicationWindow {
 
     property bool activeScreen: Qt.application.state === Qt.ApplicationActive
 
-    property string currentTheme
-
     function updatePortraitMode() {
         if (height >= width)
             Config.Theme.portrait = true
@@ -76,20 +74,6 @@ ApplicationWindow {
         }
     }
 
-    Component {
-        id: componentSettings
-
-        Item {
-
-        }
-    }
-
-    Settings {
-        property string theme
-
-        onThemeChanged: currentTheme = theme
-    }
-
     Loader {
         id: loaderMainTheme
 
@@ -97,7 +81,7 @@ ApplicationWindow {
 
         focus: true
 
-        source: currentTheme !== "" ? ("themes/" + currentTheme + "/ThemeMain.qml") : ""
+        source: "themes/" + Config.Theme.theme + "/ThemeMain.qml"
     }
 
     Loader {
@@ -109,7 +93,7 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        sourceComponent: !QL.ApplicationInfo.hasShownInitialDialog || currentTheme === "" ? introView : componentSettings
+        sourceComponent: !QL.ApplicationInfo.hasShownInitialDialog ? introView : undefined
 
         focus: true
 
@@ -136,8 +120,6 @@ ApplicationWindow {
 
                 onDone: {
                     QL.ApplicationInfo.hasShownInitialDialog = true
-                    loader.unload()
-                    loader.sourceComponent = componentSettings
                 }
             }
         }

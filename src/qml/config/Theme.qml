@@ -1,7 +1,10 @@
 pragma Singleton
 import QtQuick 2.0
+import Qt.labs.settings 1.0
 
 Item {
+    id: root
+
     property color colorGridContainer: "#f5f5f5"
     property color colorApplicationWindow: "#00000000"
 
@@ -10,6 +13,8 @@ Item {
 
     property int columns: getColumns(portrait)
     property int rows: getRows(portrait)
+
+    property string theme: "classic"
 
     function getColumns(portrait) {
         if (portrait) {
@@ -37,5 +42,9 @@ Item {
                 return 4
             }
         }
+    }
+
+    Settings {
+        property alias theme: root.theme
     }
 }
