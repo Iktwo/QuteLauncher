@@ -4,6 +4,7 @@ import QtQuick.Controls.Styles 1.4
 import Qt.labs.settings 1.0
 import com.iktwo.qutelauncher 1.0 as QL
 import components 1.0 as C
+import config 1.0 as Config
 
 IntroScreen {
     Column {
@@ -35,5 +36,5 @@ IntroScreen {
         id: exclusiveGroupTheme
     }
 
-    onNext: settings.theme = exclusiveGroupTheme.current.text.toLowerCase()
+    onNext: Config.Theme.theme = exclusiveGroupTheme.current.text.toLowerCase()
 }
