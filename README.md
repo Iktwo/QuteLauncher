@@ -21,7 +21,7 @@ Requires Qt >= 5.5
 * Support icon themes.
 * Investigate if it is possible to integrate widgets.
 
-# Anaylitics
+# Analitics
 
 This project uses Firebase Analytics to collect usage data.
 
