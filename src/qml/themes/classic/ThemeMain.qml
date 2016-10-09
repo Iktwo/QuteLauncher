@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import com.iktwo.qutelauncher 1.0 as QL
+import config 1.0 as Config
 
 FocusScope {
     id: root
@@ -31,6 +32,57 @@ FocusScope {
         enabled: !explandableItem.isOpened
 
         onPressAndHold: QL.Launcher.pickWallpaper()
+    }
+
+    GridView {
+        id: gridView
+
+        anchors.fill: parent
+
+        property int highlightedItem
+
+        maximumFlickVelocity: height * 5
+
+        header: Item {
+            width: parent.width
+            height: 20 * QL.ScreenValues.dp
+        }
+
+        add: Transition {
+            NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 450 }
+            NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 500 }
+        }
+
+        displaced: Transition {
+            NumberAnimation { property: "opacity"; to: 1.0 }
+            NumberAnimation { property: "scale"; to: 1.0 }
+        }
+
+        clip: true
+        interactive: visible
+
+        cellHeight: height / Config.Theme.getColumns()
+        cellWidth: width / Config.Theme.getRows()
+
+        model: listModelFavorites
+
+        delegate: ApplicationTile {
+            id: applicationTile
+
+            height: GridView.view.cellHeight
+            width: GridView.view.cellWidth
+
+            source: "image://icon/" + model.packageName
+            text: model.name
+
+            onClicked: QL.PackageManager.launchApplication(model.packageName)
+            onPressAndHold: root.pressAndHold(model, x, y)
+        }
+
+        onHeightChanged: {
+            if (height !== 0)
+                cacheBuffer = Math.max(1080, height * 5)
+        }
     }
 
     Item {
@@ -111,10 +163,10 @@ FocusScope {
 
     Connections {
         target: QL.Launcher
+
         onNewIntentReceived: explandableItem.close()
         onMinimized: explandableItem.close()
     }
-
 
     ApplicationGridMenu {
         id: applicationGridMenu

@@ -52,6 +52,7 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
+
                 color: "black"
                 opacity: 0.3
                 visible: applicationGrid.editMode
@@ -60,14 +61,14 @@ Item {
             ApplicationGrid {
                 id: applicationGrid
 
-                visible: true
-                model: QL.PackageManager
-
                 anchors {
                     top: parent.top; topMargin: parent.height * 0.025
                     bottom: parent.bottom; bottomMargin: parent.height * 0.025
                     left: parent.left; leftMargin: (parent.width / 2 ) * 0.025
                 }
+
+                visible: true
+                model: QL.PackageManager
 
                 width: (parent.width / 2 ) * 0.95
             }
