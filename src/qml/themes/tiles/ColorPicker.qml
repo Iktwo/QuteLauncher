@@ -14,6 +14,7 @@ Item {
 
     function close() {
         visible = false
+        /// TODO: verify this
         // backKeyHandler.forceActiveFocus()
     }
 

@@ -12,6 +12,8 @@ ApplicationWindow {
     property bool isWindowActive: Qt.application.state === Qt.ApplicationActive
     property int dpi: Screen.pixelDensity * 25.4
 
+    property variant favoritesData: ([])
+
     property var resolutions: [
         {"height": 480, "width": 320}, // HVGA
         {"height": 640, "width": 480}, // VGA
@@ -58,6 +60,14 @@ ApplicationWindow {
     onActiveScreenChanged: {
         if (activeScreen)
             QL.ScreenValues.updateScreenValues()
+    }
+
+    onFavoritesDataChanged: {
+        listModelFavorites.clear()
+
+        for (var i = 0; i < favoritesData.length; ++i) {
+            listModelFavorites.append(favoritesData)
+        }
     }
 
     Component.onCompleted: {
@@ -153,6 +163,24 @@ ApplicationWindow {
         fillMode: Image.Tile
 
         source: QL.ScreenValues.navBarVisible ? "qrc:/images/shadow_navigationbar" : ""
+    }
+
+    Connections {
+        target: QL.PackageManager
+
+        onAddedApplicationToGrid: {
+            var favs = favoritesData
+            favs.push({'name': name, 'packageName': packageName})
+            favoritesData = favs
+        }
+    }
+
+    Settings {
+        property alias favorites: applicationWindow.favoritesData
+    }
+
+    ListModel {
+        id: listModelFavorites
     }
 
     //    D.Debug {
