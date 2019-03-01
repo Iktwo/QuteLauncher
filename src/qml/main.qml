@@ -89,8 +89,6 @@ ApplicationWindow {
 
         anchors.fill: parent
 
-        focus: true
-
         source: "themes/" + Config.Theme.theme + "/ThemeMain.qml"
     }
 
@@ -108,6 +106,8 @@ ApplicationWindow {
         focus: true
 
         Keys.onBackPressed: {
+            event.accepted = true
+
             if (loaderMainTheme.item && loaderMainTheme.item.opened) {
                 QL.Launcher.minimize()
             }
