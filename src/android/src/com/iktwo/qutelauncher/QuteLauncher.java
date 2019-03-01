@@ -67,10 +67,10 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
         }
 
         for (int i = 0; i < appArray.length; i++) {
-            if (appArray[i].name.length() > 0 && (Character.isSpaceChar(appArray[i].name.charAt(0)) || Character.isWhitespace(appArray[i].name.charAt(0)))) {
-                char charToReplace = appArray[i].name.charAt(0);
-                appArray[i].setName(appArray[i].name.replace(charToReplace, ' ').trim());
-                appArray[i].setName(appArray[i].name.trim());
+            if (appArray[i].getName().length() > 0 && (Character.isSpaceChar(appArray[i].getName().charAt(0)) || Character.isWhitespace(appArray[i].getName().charAt(0)))) {
+                char charToReplace = appArray[i].getName().charAt(0);
+                appArray[i].setName(appArray[i].getName().replace(charToReplace, ' ').trim());
+                appArray[i].setName(appArray[i].getName().trim());
             }
         }
 
@@ -172,42 +172,5 @@ public class QuteLauncher extends org.qtproject.qt5.android.bindings.QtActivity 
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         jnewIntent(qtObject);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        System.exit(0);
-    }
-
-}
-
-class Application implements Comparable<Application> {
-    public String packageName;
-    public String name;
-
-    public Application(String name, String packageName) {
-        this.name = name;
-        this.packageName = packageName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name2) {
-        name = name2;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName2) {
-        packageName = packageName2;
-    }
-
-    public int compareTo(Application application) {
-        return this.getName().toUpperCase().compareTo(application.getName().toUpperCase());
     }
 }

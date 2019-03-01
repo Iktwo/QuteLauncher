@@ -1,24 +1,33 @@
 buildscript {
+    ext {
+        kotlin_version = '1.3.0'
+        gradle_version = '3.3.1'
+    }
+
     repositories {
+        google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
     }
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61"
 }
 
 android {
@@ -35,33 +44,37 @@ android {
      * Changing them manually might break the compilation!
      *******************************************************/
 
+    /**
+     * Uncomment the following lines and remove minsdk from manifest to sync inside IntelliJ:
+     *
+     * String androidBuildToolsVersion = "28.0.3"
+     * String androidCompileSdkVersion = "28"
+     * String qt5AndroidDir = ""
+     */
+
+
     compileSdkVersion androidCompileSdkVersion.toInteger()
 
     buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
         applicationId "com.iktwo.qutelauncher"
+        targetSdkVersion 28
     }
 
     String APK_NAME = "qutelauncher"
 
-    String BUILDTYPE = ""
-
     productFlavors {
         full {
-
+            dimension "analytics"
         }
 
         noanalytics {
-
+            dimension "analytics"
         }
     }
 
-    buildTypes {
-        releaseUnsigned {
-            BUILDTYPE = "unsigned"
-        }
-    }
+    flavorDimensions "analytics"
 
     sourceSets {
         main {
@@ -89,39 +102,31 @@ android {
         abortOnError false
     }
 
-    assembleRelease.doLast {
+    afterEvaluate {
+        assembleRelease.doLast {
 
+        }
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.outputFile = new File(
-                    output.outputFile.parent,
-                    "android-build-release-unsigned.apk")
-
-                    // TODO: figure out how to fix this
-                    // APK_NAME + "_" + variant.productFlavors[0].name + "_"+ BUILDTYPE + ".apk")
+        variant.outputs.all { output ->
+            output.outputFileName = [APK_NAME, variant.productFlavors[0].name, variant.buildType.name].join("_") + ".apk"
         }
 
         variant.assemble.doLast {
-            variant.outputs.each { output ->
-                println "aligned " + output.outputFile
-                println "unaligned " + output.packageApplication.outputFile
+            variant.outputs.all { output ->
+                String apk_name = [APK_NAME, variant.productFlavors[0].name, variant.buildType.name].join("_") + ".apk"
 
-                File unaligned = output.packageApplication.outputFile;
-                File aligned = output.outputFile
-                if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
-                    println "deleting " + unaligned.getName()
-                    unaligned.delete()
+                if (variant.productFlavors[0].name == "full") {
+                    copy {
+                        from output.outputFile
+                        into file(buildDir.getPath() + "/outputs/apk/")
+                        rename { String fileName ->
+                            fileName.replace(apk_name, "android-build-" + variant.buildType.name + ".apk")
+                        }
+                    }
                 }
             }
         }
     }
-}
-
-dependencies {
-    fullCompile 'com.google.firebase:firebase-core:9.4.0'
-    fullCompile 'com.android.support:appcompat-v7:24.2.0'
-    fullCompile 'com.google.firebase:firebase-messaging:9.4.0'
-    fullCompile 'com.google.firebase:firebase-crash:9.4.0'
 }
