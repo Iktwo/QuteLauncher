@@ -44,3 +44,4 @@ gradle.properties
 android.iml
 build-src*
 src/android/gradle.properties
+src/android/local.properties
