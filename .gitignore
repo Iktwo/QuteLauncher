@@ -43,3 +43,4 @@ gen
 gradle.properties
 android.iml
 build-src*
+src/android/gradle.properties
