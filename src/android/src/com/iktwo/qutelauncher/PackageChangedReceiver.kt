@@ -3,7 +3,6 @@ package com.iktwo.qutelauncher
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 
 class PackageChangedReceiver : BroadcastReceiver() {
 
@@ -34,7 +33,10 @@ class PackageChangedReceiver : BroadcastReceiver() {
             internalQtObject = qtObject2
         }
 
+        @JvmStatic
         private external fun jpackageAdded(label: String, packageName: String, qtObject: Long)
+
+        @JvmStatic
         private external fun jpackageRemoved(packageName: String, qtObject: Long)
     }
 }

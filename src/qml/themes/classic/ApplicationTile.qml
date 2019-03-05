@@ -38,7 +38,7 @@ Item {
         Image {
             id: image
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Layout.Center
 
             asynchronous: true
 
@@ -51,7 +51,7 @@ Item {
         Label {
             id: label
 
-            anchors.horizontalCenter: parent.horizontalCenter
+            Layout.alignment: Layout.Center
 
             Layout.preferredWidth: parent.width * 0.90
 
