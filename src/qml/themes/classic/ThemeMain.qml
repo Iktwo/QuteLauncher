@@ -60,6 +60,7 @@ FocusScope {
 
         clip: true
         interactive: visible
+        visible: false
 
         cellHeight: height / Config.Theme.getColumns()
         cellWidth: width / Config.Theme.getRows()

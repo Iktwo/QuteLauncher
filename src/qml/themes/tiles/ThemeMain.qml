@@ -67,7 +67,6 @@ Item {
                     left: parent.left; leftMargin: (parent.width / 2 ) * 0.025
                 }
 
-                visible: true
                 model: QL.PackageManager
 
                 width: (parent.width / 2 ) * 0.95

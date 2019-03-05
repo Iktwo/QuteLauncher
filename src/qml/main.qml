@@ -34,19 +34,6 @@ ApplicationWindow {
             Config.Theme.portrait = true
     }
 
-    function getScreenDensityConfiguration(density) {
-        switch(density) {
-        case 420:
-            return "xxhigh"
-        case 480:
-            return "xxhigh"
-        case 560:
-            return "xxxhigh"
-        case 640:
-            return "xxxhigh"
-        }
-    }
-
     color: Config.Theme.colorApplicationWindow
 
     width: resolutions[currentResolution].width
@@ -90,6 +77,21 @@ ApplicationWindow {
         anchors.fill: parent
 
         source: "themes/" + Config.Theme.theme + "/ThemeMain.qml"
+
+        Keys.onBackPressed: {
+            event.accepted = true
+
+            if (loaderMainTheme.item && loaderMainTheme.item.opened) {
+                QL.Launcher.minimize()
+            }
+        }
+
+        Keys.onEscapePressed: {
+            if (loaderMainTheme.item && loaderMainTheme.item.opened) {
+                QL.Launcher.minimize()
+            }
+        }
+
     }
 
     Loader {
@@ -97,6 +99,7 @@ ApplicationWindow {
 
         function unload() {
             sourceComponent = null
+            loaderMainTheme.focus = true
         }
 
         anchors.fill: parent
@@ -105,12 +108,9 @@ ApplicationWindow {
 
         focus: true
 
-        Keys.onBackPressed: {
-            event.accepted = true
-
-            if (loaderMainTheme.item && loaderMainTheme.item.opened) {
-                QL.Launcher.minimize()
-            }
+        // TODO: Remove this once the intro is ready
+        Component.onCompleted: {
+            unload()
         }
 
         Component {
@@ -130,6 +130,7 @@ ApplicationWindow {
 
                 onDone: {
                     QL.ApplicationInfo.hasShownInitialDialog = true
+                    loader.unload()
                 }
             }
         }
