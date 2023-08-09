@@ -1,4 +1,4 @@
-#include <QApplication>
+#include <QGuiApplication>
 #include <QQuickView>
 #include <QQmlApplicationEngine>
 #include <QQmlEngine>
@@ -57,7 +57,7 @@ static QObject *application_info_provider(QQmlEngine *engine, QJSEngine *scriptE
 
 int main(int argc, char *argv[])
 {
-    QScopedPointer<QApplication> app(new QApplication(argc, argv));
+    QScopedPointer<QGuiApplication> app(new QGuiApplication(argc, argv));
 
     QCoreApplication::setOrganizationName("Iktwo Corp.");
     QCoreApplication::setOrganizationDomain("iktwo.com");
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    QObject::connect(&engine, SIGNAL(quit()), QCoreApplication::instance(), SLOT(quit()));
+    QObject::connect(&engine, SIGNAL(quit()), QGuiApplication::instance(), SLOT(quit()));
 
     qmlRegisterSingletonType<PackageManager>("com.iktwo.qutelauncher", 1, 0, "PackageManager", package_manager_provider);
     qmlRegisterSingletonType<ApplicationInfo>("com.iktwo.qutelauncher", 1, 0, "ApplicationInfo", application_info_provider);

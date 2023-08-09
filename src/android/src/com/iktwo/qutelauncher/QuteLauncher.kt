@@ -19,7 +19,7 @@ import android.util.Log
 import android.view.View
 import java.io.ByteArrayOutputStream
 
-open class QuteLauncher : org.qtproject.qt5.android.bindings.QtActivity() {
+open class QuteLauncher : org.qtproject.qt.android.bindings.QtActivity() {
     init {
         instance = this
     }
@@ -60,12 +60,14 @@ open class QuteLauncher : org.qtproject.qt5.android.bindings.QtActivity() {
         private var mPm: PackageManager? = null
         private var qtObject: Long = 0
 
+        @JvmStatic
         fun connectionType(): String {
             cm = instance!!.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-            val netInfo = cm!!.activeNetworkInfo
+            val netInfo = cm!!.activeNetworkInfo!!
             return netInfo.typeName
         }
 
+        @JvmStatic
         fun isApplaunchable(packageName: String): Boolean {
             return mPm!!.getLaunchIntentForPackage(packageName) != null
         }
@@ -117,7 +119,7 @@ open class QuteLauncher : org.qtproject.qt5.android.bindings.QtActivity() {
             try {
                 val app = mPm!!.getApplicationInfo(packageName, 0)
                 val resources = mPm!!.getResourcesForApplication(app)
-                val resolveInfo = mPm!!.resolveActivity(mPm!!.getLaunchIntentForPackage(packageName), 0)
+                val resolveInfo = mPm!!.resolveActivity(mPm!!.getLaunchIntentForPackage(packageName)!!, 0)!!
                 icon = resources.getDrawableForDensity(resolveInfo.activityInfo.iconResource, mIconDpi)
             } catch (e: Exception) {
                 Log.e(TAG, "exception getApplicationIcon for $packageName", e)
@@ -165,7 +167,7 @@ open class QuteLauncher : org.qtproject.qt5.android.bindings.QtActivity() {
                 val app = mPm!!.getApplicationInfo(packageName, 0)
 
                 val resources = mPm!!.getResourcesForApplication(app)
-                val resolveInfo = mPm!!.resolveActivity(mPm!!.getLaunchIntentForPackage(packageName), 0)
+                val resolveInfo = mPm!!.resolveActivity(mPm!!.getLaunchIntentForPackage(packageName)!!, 0)!!
 
                 return resolveInfo.loadLabel(mPm).toString()
             } catch (e: Exception) {
@@ -175,17 +177,20 @@ open class QuteLauncher : org.qtproject.qt5.android.bindings.QtActivity() {
 
         }
 
+        @JvmStatic
         fun pickWallpaper() {
             val intent = Intent(Intent.ACTION_SET_WALLPAPER)
             instance!!.startActivity(Intent.createChooser(intent, "Select Wallpaper"))
         }
 
+        @JvmStatic
         fun openApplicationInfo(packageName: String) {
             val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             intent.data = Uri.parse("package:$packageName")
             instance!!.startActivity(intent)
         }
 
+        @JvmStatic
         fun setQtObject(qtObject: Long) {
             QuteLauncher.qtObject = qtObject
         }

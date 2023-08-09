@@ -1,8 +1,8 @@
 #include "iconimageprovider.h"
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniObject>
-#include <QAndroidJniEnvironment>
+#include <QJniObject>
+#include <QJniEnvironment>
 #endif
 
 #include <QDebug>
@@ -19,12 +19,12 @@ QImage IconImageProvider::requestImage(const QString &id, QSize *size, const QSi
     QImage image;
 
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject appIcon = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
+    QJniObject appIcon = QJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                                                           "getApplicationIcon",
                                                                           "(Ljava/lang/String;)[B",
-                                                                          QAndroidJniObject::fromString(id).object<jstring>());
+                                                                          QJniObject::fromString(id).object<jstring>());
 
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     jbyteArray iconDataArray = appIcon.object<jbyteArray>();
 
     if (!iconDataArray) {

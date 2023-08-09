@@ -1,8 +1,7 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.3
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
 import com.iktwo.qutelauncher 1.0 as QL
 import config 1.0 as Config
 
@@ -15,7 +14,7 @@ ScrollView {
 
     anchors.fill: parent
 
-    style: ScrollViewStyle {
+    /*style: ScrollViewStyle {
         transientScrollBars: false
 
         scrollBarBackground: Rectangle {
@@ -36,7 +35,7 @@ ScrollView {
     }
 
     flickableItem.focus: true
-    flickableItem.interactive: true
+    flickableItem.interactive: true*/
 
     GridView {
         id: gridView

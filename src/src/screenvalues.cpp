@@ -4,8 +4,8 @@
 #include <QGuiApplication>
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniEnvironment>
-#include <QAndroidJniObject>
+#include <QJniEnvironment>
+#include <QJniObject>
 #endif
 
 #include <QDebug>
@@ -21,10 +21,6 @@ ScreenValues::ScreenValues(QObject *parent) :
 
     m_dp = (float) m_dpi / 160;
 
-    setStatusBarHeight(getResourceSize("status_bar_height"));
-    setNavigationBarHeight(getResourceSize("navigation_bar_height"));
-    setNavigationBarHeightLandscape(getResourceSize("navigation_bar_height_landscape"));
-
     updateScreenValues();
 
     m_isTablet = retrieveIsTablet();
@@ -34,21 +30,25 @@ void ScreenValues::updateScreenValues()
 {
 #ifdef Q_OS_ANDROID
     if (m_system.sdkInt() >= 19) {
-        QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
+        QJniObject activity = QJniObject::callStaticObjectMethod("org/qtproject/qt/android/QtNative",
                                                                                "activity",
                                                                                "()Landroid/app/Activity;");
 
-        QAndroidJniObject wm = activity.callObjectMethod("getWindowManager", "()Landroid/view/WindowManager;");
-        QAndroidJniObject display = wm.callObjectMethod("getDefaultDisplay", "()Landroid/view/Display;");
+        QJniObject wm = activity.callObjectMethod("getWindowManager", "()Landroid/view/WindowManager;");
+        QJniObject display = wm.callObjectMethod("getDefaultDisplay", "()Landroid/view/Display;");
 
-        QAndroidJniObject realSize = QAndroidJniObject("android/graphics/Point");
+        QJniObject realSize = QJniObject("android/graphics/Point");
         display.callMethod<void>("getRealSize", "(Landroid/graphics/Point;)V", realSize.object());
 
-        QAndroidJniObject displayFrame = QAndroidJniObject("android/graphics/Rect");
-        QAndroidJniObject window = activity.callObjectMethod("getWindow", "()Landroid/view/Window;");
-        QAndroidJniObject view = window.callObjectMethod("getDecorView", "()Landroid/view/View;");
-        QAndroidJniObject rootView = view.callObjectMethod("getRootView", "()Landroid/view/View;");
+        QJniObject displayFrame = QJniObject("android/graphics/Rect");
+        QJniObject window = activity.callObjectMethod("getWindow", "()Landroid/view/Window;");
+        QJniObject view = window.callObjectMethod("getDecorView", "()Landroid/view/View;");
+        QJniObject rootView = view.callObjectMethod("getRootView", "()Landroid/view/View;");
         rootView.callMethod<void>("getWindowVisibleDisplayFrame", "(Landroid/graphics/Rect;)V", displayFrame.object());
+
+        setStatusBarHeight(getResourceSize("status_bar_height"));
+        setNavigationBarHeight(getResourceSize("navigation_bar_height"));
+        setNavigationBarHeightLandscape(getResourceSize("navigation_bar_height_landscape"));
 
         if (((int) realSize.getField<jint>("y") - (int) displayFrame.callMethod<jint>("height")) - m_statusBarHeight == 0)
             setNavBarVisible(false);
@@ -175,17 +175,17 @@ void ScreenValues::setNavBarVisible(bool visible)
 bool ScreenValues::retrieveIsTablet()
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     env->PushLocalFrame(9);
 
-    QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
+    QJniObject activity = QJniObject::callStaticObjectMethod("org/qtproject/qt/android/QtNative",
                                                                            "activity",
                                                                            "()Landroid/app/Activity;");
 
-    QAndroidJniObject resources = activity.callObjectMethod("getResources",
+    QJniObject resources = activity.callObjectMethod("getResources",
                                                             "()Landroid/content/res/Resources;");
 
-    QAndroidJniObject configuration = resources.callObjectMethod("getConfiguration",
+    QJniObject configuration = resources.callObjectMethod("getConfiguration",
                                                                  "()Landroid/content/res/Configuration;");
 
     jint smallestScreenWidthDp = configuration.getField<jint>("smallestScreenWidthDp");
@@ -199,10 +199,10 @@ bool ScreenValues::retrieveIsTablet()
 int ScreenValues::retrieveDpi()
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     env->PushLocalFrame(9);
 
-    QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
+    QJniObject activity = QJniObject::callStaticObjectMethod("org/qtproject/qt/android/QtNative",
                                                                            "activity",
                                                                            "()Landroid/app/Activity;");
     jclass activityClass = env->GetObjectClass(activity.object<jobject>());
@@ -237,10 +237,10 @@ int ScreenValues::retrieveDpi()
 float ScreenValues::retrieveDensity()
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     env->PushLocalFrame(9);
 
-    QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
+    QJniObject activity = QJniObject::callStaticObjectMethod("org/qtproject/qt/android/QtNative",
                                                                            "activity",
                                                                            "()Landroid/app/Activity;");
     jclass activityClass = env->GetObjectClass(activity.object<jobject>());
@@ -275,15 +275,15 @@ float ScreenValues::retrieveDensity()
 int ScreenValues::getResourceSize(const QString &resource)
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject activity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative",
+    QJniObject activity = QJniObject::callStaticObjectMethod("org/qtproject/qt/android/QtNative",
                                                                            "activity",
                                                                            "()Landroid/app/Activity;");
 
-    QAndroidJniObject resources = activity.callObjectMethod("getResources", "()Landroid/content/res/Resources;");
+    QJniObject resources = activity.callObjectMethod("getResources", "()Landroid/content/res/Resources;");
 
-    QAndroidJniObject jName = QAndroidJniObject::fromString(resource);
-    QAndroidJniObject jDefType = QAndroidJniObject::fromString("dimen");
-    QAndroidJniObject jDefPackage = QAndroidJniObject::fromString("android");
+    QJniObject jName = QJniObject::fromString(resource);
+    QJniObject jDefType = QJniObject::fromString("dimen");
+    QJniObject jDefPackage = QJniObject::fromString("android");
 
     jint identifier = resources.callMethod<jint>("getIdentifier",
                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I",

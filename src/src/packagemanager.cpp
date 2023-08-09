@@ -7,7 +7,7 @@
 #include <QSettings>
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniEnvironment>
+#include <QJniEnvironment>
 
 static void packageAdded(JNIEnv *env, jobject thiz, jstring label, jstring packageName, jlong qtObject)
 {
@@ -28,9 +28,9 @@ PackageManager::PackageManager(QObject *parent) :
     QAbstractListModel(parent)
 {
 #ifdef Q_OS_ANDROID
-    mAndroidActivity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative", "activity", "()Landroid/app/Activity;");
-    mIntentFilter = QAndroidJniObject("android/content/IntentFilter");
-    mBroadcastReceiver = QAndroidJniObject("com/iktwo/qutelauncher/PackageChangedReceiver");
+    mAndroidActivity = QJniObject::callStaticObjectMethod("org/qtproject/qt/android/QtNative", "activity", "()Landroid/app/Activity;");
+    mIntentFilter = QJniObject("android/content/IntentFilter");
+    mBroadcastReceiver = QJniObject("com/iktwo/qutelauncher/PackageChangedReceiver");
 #endif
 
     connect(this, SIGNAL(newApplicationDetected(QString, QString)), this, SLOT(addApplication(QString, QString)));
@@ -67,11 +67,11 @@ void PackageManager::registerNativeMethods() {
     JNINativeMethod methods[] {{"jpackageRemoved", "(Ljava/lang/String;J)V", reinterpret_cast<void *>(packageRemoved)},
         {"jpackageAdded", "(Ljava/lang/String;Ljava/lang/String;J)V", reinterpret_cast<void *>(packageAdded)}};
 
-    QAndroidJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/PackageChangedReceiver",
+    QJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/PackageChangedReceiver",
                                               "setQtObject", "(J)V",
                                               "(J)V", reinterpret_cast<long>(this));
 
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     jclass objectClass = env->GetObjectClass(mBroadcastReceiver.object<jobject>());
 
     if (env->ExceptionCheck())
@@ -92,10 +92,10 @@ void PackageManager::registerNativeMethods() {
 void PackageManager::launchApplication(const QString &application)
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncher",
+    QJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncher",
                                               "launchApplication",
                                               "(Ljava/lang/String;)V",
-                                              QAndroidJniObject::fromString(application).object<jstring>());
+                                              QJniObject::fromString(application).object<jstring>());
 #else
     Q_UNUSED(application)
 #endif
@@ -118,7 +118,7 @@ QString GetRandomString()
     QString randomString;
     for(int i=0; i < randomStringLength; ++i)
     {
-        int index = qrand() % possibleCharacters.length();
+        int index = arc4random() % possibleCharacters.length();
         QChar nextChar = possibleCharacters.at(index);
         randomString.append(nextChar);
     }
@@ -130,17 +130,17 @@ void PackageManager::retrievePackages()
 {
     beginResetModel();
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject connectionType = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
+    QJniObject connectionType = QJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                                                                  "applications",
                                                                                  "()[Lcom/iktwo/qutelauncher/Application;");
 
 
     jobjectArray array = connectionType.object<jobjectArray>();
 
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     jsize size = env->GetArrayLength(array);
     for (int i = 0; i < size; ++i) {
-        QAndroidJniObject obj = env->GetObjectArrayElement(array, i);
+        QJniObject obj = env->GetObjectArrayElement(array, i);
 
         QString name = jstringToQString((obj.callObjectMethod<jstring>("getName")).object<jstring>());
         QString packageName = jstringToQString((obj.callObjectMethod<jstring>("getPackageName")).object<jstring>());
@@ -266,9 +266,9 @@ void PackageManager::registerBroadcast()
 
 #ifdef Q_OS_ANDROID
     qDebug() << Q_FUNC_INFO << "registering broadcast";
-    QAndroidJniObject addActionString = QAndroidJniObject::fromString("android.intent.action.PACKAGE_ADDED");
-    QAndroidJniObject removeActionString = QAndroidJniObject::fromString("android.intent.action.PACKAGE_REMOVED");
-    QAndroidJniObject dataSchemeString = QAndroidJniObject::fromString("package");
+    QJniObject addActionString = QJniObject::fromString("android.intent.action.PACKAGE_ADDED");
+    QJniObject removeActionString = QJniObject::fromString("android.intent.action.PACKAGE_REMOVED");
+    QJniObject dataSchemeString = QJniObject::fromString("package");
 
 
     mIntentFilter.callMethod<void>("addAction", "(Ljava/lang/String;)V", addActionString.object<jstring>());
@@ -291,10 +291,10 @@ int PackageManager::indexOfSection(const QString &section)
 void PackageManager::openApplicationInfo(const QString &packageName)
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
+    QJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                               "openApplicationInfo",
                                               "(Ljava/lang/String;)V",
-                                              QAndroidJniObject::fromString(packageName).object<jstring>());
+                                              QJniObject::fromString(packageName).object<jstring>());
 #else
     Q_UNUSED(packageName)
 #endif
@@ -309,7 +309,7 @@ void PackageManager::testJNICall()
 {
 #ifdef Q_OS_ANDROID
     qDebug() << "GEtting instance";
-    QAndroidJniObject packageManager = QAndroidJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
+    QJniObject packageManager = QJniObject::callStaticObjectMethod("com/iktwo/qutelauncher/QuteLauncher",
                                                                                  "getInstance",
                                                                                  "()Lcom/iktwo/qutelauncher/QuteLauncher;");
 
@@ -326,7 +326,7 @@ QStringList PackageManager::sections() const
 #ifdef Q_OS_ANDROID
 QString PackageManager::jstringToQString(jstring string)
 {
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     jboolean jfalse = false;
     return QString(env->GetStringUTFChars(string, &jfalse));
 }

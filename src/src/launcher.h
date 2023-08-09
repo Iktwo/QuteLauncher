@@ -4,7 +4,7 @@
 #include <QObject>
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniObject>
+#include <QJniObject>
 #endif
 
 class Launcher : public QObject
@@ -26,7 +26,7 @@ private:
     void registerNativeMethods();
 
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject mActivity;
+    QJniObject mActivity;
 #endif
 };
 

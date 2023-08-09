@@ -32,7 +32,6 @@
     </qresource>
     <qresource prefix="/images">
         <file alias="test">resources/images/test.png</file>
-        <file alias="shadow">resources/images/shadow.png</file>
         <file alias="shadow_navigationbar">resources/images/shadow_navigationbar.png</file>
         <file alias="icon">resources/images/icon.svg</file>
     </qresource>

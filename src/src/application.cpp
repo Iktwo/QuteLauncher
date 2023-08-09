@@ -1,6 +1,6 @@
 #include "application.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 
 Application::Application(QObject *parent) :
     QObject(parent)
@@ -52,18 +52,18 @@ QString Application::category() const
 void Application::setCategory()
 {
     QString name = mName.simplified();
-    name.replace(QRegExp("[ÁÀÂÃÄ]"), "A");
-    name.replace(QRegExp("[áàâãä]"), "a");
-    name.replace(QRegExp("[ÉÈÊẼË]"), "E");
-    name.replace(QRegExp("[éèêẽë]"), "e");
-    name.replace(QRegExp("[ÍÌÎĨÏ]"), "I");
-    name.replace(QRegExp("[íìîĩï]"), "i");
-    name.replace(QRegExp("[ÓÒÔÕÖ]"), "O");
-    name.replace(QRegExp("[óòôõö]"), "o");
-    name.replace(QRegExp("[ÚÙÛŨÜ]"), "U");
-    name.replace(QRegExp("[úùûũü]"), "u");
-    name.replace(QRegExp("[Ç]"), "C");
-    name.replace(QRegExp("[ç]"), "c");
+    name.replace(QRegularExpression("[ÁÀÂÃÄ]"), "A");
+    name.replace(QRegularExpression("[áàâãä]"), "a");
+    name.replace(QRegularExpression("[ÉÈÊẼË]"), "E");
+    name.replace(QRegularExpression("[éèêẽë]"), "e");
+    name.replace(QRegularExpression("[ÍÌÎĨÏ]"), "I");
+    name.replace(QRegularExpression("[íìîĩï]"), "i");
+    name.replace(QRegularExpression("[ÓÒÔÕÖ]"), "O");
+    name.replace(QRegularExpression("[óòôõö]"), "o");
+    name.replace(QRegularExpression("[ÚÙÛŨÜ]"), "U");
+    name.replace(QRegularExpression("[úùûũü]"), "u");
+    name.replace(QRegularExpression("[Ç]"), "C");
+    name.replace(QRegularExpression("[ç]"), "c");
 
     if (name.simplified().isEmpty())
         mCategory = " ";

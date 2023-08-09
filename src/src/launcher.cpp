@@ -1,7 +1,7 @@
 #include "launcher.h"
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniEnvironment>
+#include <QJniEnvironment>
 
 static void newIntent(JNIEnv *env, jobject thiz, jlong qtObject)
 {
@@ -14,7 +14,7 @@ static void newIntent(JNIEnv *env, jobject thiz, jlong qtObject)
 Launcher::Launcher(QObject *parent) : QObject(parent)
 {
 #ifdef Q_OS_ANDROID
-    mActivity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative", "activity", "()Landroid/app/Activity;");
+    mActivity = QJniObject::callStaticObjectMethod("org/qtproject/qt/android/QtNative", "activity", "()Landroid/app/Activity;");
 
 #endif
 }
@@ -22,7 +22,7 @@ Launcher::Launcher(QObject *parent) : QObject(parent)
 void Launcher::pickWallpaper()
 {
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncher",
+    QJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncher",
                                               "pickWallpaper",
                                               "()V");
 #endif
@@ -48,11 +48,11 @@ void Launcher::registerNativeMethods()
 #ifdef Q_OS_ANDROID
     JNINativeMethod methods[] {{"jnewIntent", "(J)V", reinterpret_cast<void *>(newIntent)}};
 
-    QAndroidJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncherFlavored",
+    QJniObject::callStaticMethod<void>("com/iktwo/qutelauncher/QuteLauncher",
                                               "setQtObject", "(J)V",
                                               "(J)V", reinterpret_cast<long>(this));
 
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     jclass objectClass = env->GetObjectClass(mActivity.object<jobject>());
 
     if (env->ExceptionCheck())

@@ -1,7 +1,7 @@
 #include "system.h"
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniObject>
+#include <QJniObject>
 #endif
 
 System::System(QObject *parent) : QObject(parent)
@@ -26,7 +26,7 @@ void System::setSdkInt(int sdkInt)
 int System::getSdkInt()
 {
 #ifdef Q_OS_ANDROID
-    return m_sdkInt = QAndroidJniObject::getStaticField<jint>("android/os/Build$VERSION", "SDK_INT");
+    return m_sdkInt = QJniObject::getStaticField<jint>("android/os/Build$VERSION", "SDK_INT");
 #else
     return 0;
 #endif

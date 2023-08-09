@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniObject>
+#include <QJniObject>
 #endif
 
 class PackageManager : public QAbstractListModel
@@ -67,9 +67,9 @@ private:
     //void sortApplications();
 
 #ifdef Q_OS_ANDROID
-    QAndroidJniObject mAndroidActivity;
-    QAndroidJniObject mIntentFilter;
-    QAndroidJniObject mBroadcastReceiver;
+    QJniObject mAndroidActivity;
+    QJniObject mIntentFilter;
+    QJniObject mBroadcastReceiver;
 #endif
 };
 

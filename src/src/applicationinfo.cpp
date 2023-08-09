@@ -4,8 +4,8 @@
 #include <QDebug>
 
 #ifdef Q_OS_ANDROID
-#include <QAndroidJniEnvironment>
-#include <QAndroidJniObject>
+#include <QJniEnvironment>
+#include <QJniObject>
 #endif
 
 ApplicationInfo::ApplicationInfo(QObject *parent) :
@@ -97,7 +97,7 @@ void ApplicationInfo::setOSVersion(int version)
 int ApplicationInfo::getOSVersion()
 {
 #ifdef Q_OS_ANDROID
-    jint version = QAndroidJniObject::getStaticField<jint>("android.os.Build$VERSION", "SDK_INT");
+    jint version = QJniObject::getStaticField<jint>("android.os.Build$VERSION", "SDK_INT");
     return version;
 #else
     return -1;

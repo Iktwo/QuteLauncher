@@ -1,12 +1,12 @@
 buildscript {
     ext {
-        kotlin_version = '1.3.0'
-        gradle_version = '3.3.1'
+        kotlin_version = '1.9.0'
+        gradle_version = '8.1.0'
     }
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -15,11 +15,9 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
+repositories {
+    google()
+    mavenCentral()
 }
 
 apply plugin: 'com.android.application'
@@ -27,7 +25,6 @@ apply plugin: 'kotlin-android'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61"
 }
 
 android {
@@ -35,7 +32,7 @@ android {
      * The following variables:
      * - androidBuildToolsVersion,
      * - androidCompileSdkVersion
-     * - qt5AndroidDir - holds the path to qt android files
+     * - qtAndroidDir - holds the path to qt android files
      *                   needed to build any Qt application
      *                   on Android.
      *
@@ -44,89 +41,52 @@ android {
      * Changing them manually might break the compilation!
      *******************************************************/
 
-    /**
-     * Uncomment the following lines and remove minsdk from manifest to sync inside IntelliJ:
-     *
-     * String androidBuildToolsVersion = "28.0.3"
-     * String androidCompileSdkVersion = "28"
-     * String qt5AndroidDir = ""
-     */
-
-
-    compileSdkVersion androidCompileSdkVersion.toInteger()
-
+    compileSdkVersion androidCompileSdkVersion
     buildToolsVersion androidBuildToolsVersion
+    ndkVersion androidNdkVersion
 
-    defaultConfig {
-        applicationId "com.iktwo.qutelauncher"
-        targetSdkVersion 28
-    }
+    // Extract native libraries from the APK
+    packagingOptions.jniLibs.useLegacyPackaging true
 
-    String APK_NAME = "qutelauncher"
-
-    productFlavors {
-        full {
-            dimension "analytics"
-        }
-
-        noanalytics {
-            dimension "analytics"
-        }
-    }
-
-    flavorDimensions "analytics"
+    if (project.android.hasProperty("namespace")) {
+         namespace("com.iktwo.qutelauncher")
+     }
 
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java']
-            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
-            res.srcDirs = [qt5AndroidDir + '/res', 'res']
-            resources.srcDirs = ['src']
+            java.srcDirs = [qtAndroidDir + '/src', 'src', 'java']
+            aidl.srcDirs = [qtAndroidDir + '/src', 'src', 'aidl']
+            res.srcDirs = [qtAndroidDir + '/res', 'res']
+            resources.srcDirs = ['resources']
             renderscript.srcDirs = ['src']
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
        }
+    }
 
-        full {
-            java.srcDirs = ['full']
-            manifest.srcFile 'full/AndroidManifest.xml'
-        }
+    tasks.withType(JavaCompile) {
+        options.incremental = true
+    }
 
-        noanalytics {
-            java.srcDirs = ['noanalytics']
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     lintOptions {
         abortOnError false
     }
 
-    afterEvaluate {
-        assembleRelease.doLast {
-
-        }
+    // Do not compress Qt binary resources file
+    aaptOptions {
+        noCompress 'rcc'
     }
 
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            output.outputFileName = [APK_NAME, variant.productFlavors[0].name, variant.buildType.name].join("_") + ".apk"
-        }
-
-        variant.assemble.doLast {
-            variant.outputs.all { output ->
-                String apk_name = [APK_NAME, variant.productFlavors[0].name, variant.buildType.name].join("_") + ".apk"
-
-                if (variant.productFlavors[0].name == "full") {
-                    copy {
-                        from output.outputFile
-                        into file(buildDir.getPath() + "/outputs/apk/")
-                        rename { String fileName ->
-                            fileName.replace(apk_name, "android-build-" + variant.buildType.name + ".apk")
-                        }
-                    }
-                }
-            }
-        }
+    defaultConfig {
+        resConfig "en"
+        minSdkVersion qtMinSdkVersion
+        targetSdkVersion qtTargetSdkVersion
+        ndk.abiFilters = qtTargetAbiList.split(",")
     }
 }

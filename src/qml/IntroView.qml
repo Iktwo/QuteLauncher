@@ -1,5 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts 1.2
 import com.iktwo.qutelauncher 1.0 as QL
 
@@ -138,7 +138,9 @@ FocusScope {
 
                 ignoreUnknownSignals: true
 
-                onDone: root.done()
+                function onDone() {
+                    root.done()
+                }
             }
         }
     }

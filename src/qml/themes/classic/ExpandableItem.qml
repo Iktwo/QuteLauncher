@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick
 import com.iktwo.qutelauncher 1.0
 import config 1.0 as Config
 

@@ -1,7 +1,6 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
-import QtQuick.Window 2.2
-import Qt.labs.settings 1.0
+import QtQuick
+import QtQuick.Controls
+import QtCore
 import com.iktwo.qutelauncher 1.0 as QL
 import config 1.0 as Config
 import debug 1.0 as D
@@ -9,10 +8,10 @@ import debug 1.0 as D
 ApplicationWindow {
     id: applicationWindow
 
-    property bool isWindowActive: Qt.application.state === Qt.ApplicationActive
-    property int dpi: Screen.pixelDensity * 25.4
-
+    property bool activeScreen: Qt.application.state === Qt.ApplicationActive
     property variant favoritesData: ([])
+
+    property int dpi: Screen.pixelDensity * 25.4
 
     property var resolutions: [
         {"height": 480, "width": 320}, // HVGA
@@ -23,9 +22,9 @@ ApplicationWindow {
         {"height": 960, "width": 540}  // qHD
     ]
 
-    property int currentResolution: 3
+    property int currentResolution: 5
 
-    property bool activeScreen: Qt.application.state === Qt.ApplicationActive
+
 
     function updatePortraitMode() {
         if (height >= width)
@@ -45,8 +44,9 @@ ApplicationWindow {
     onHeightChanged: updatePortraitMode()
 
     onActiveScreenChanged: {
-        if (activeScreen)
+        if (activeScreen) {
             QL.ScreenValues.updateScreenValues()
+        }
     }
 
     onFavoritesDataChanged: {
@@ -64,6 +64,7 @@ ApplicationWindow {
     Timer {
         interval: 550
         running: true
+        repeat: false
 
         onTriggered: {
             QL.Launcher.registerMethods()
@@ -78,7 +79,7 @@ ApplicationWindow {
 
         source: "themes/" + Config.Theme.theme + "/ThemeMain.qml"
 
-        Keys.onBackPressed: {
+        Keys.onBackPressed: (event) => {
             event.accepted = true
 
             if (loaderMainTheme.item && loaderMainTheme.item.opened) {
@@ -136,18 +137,18 @@ ApplicationWindow {
         }
     }
 
-    Image  {
+    Rectangle  {
+        id: topBarBackground
+
         anchors {
             left: parent.left
             right: parent.right
             top: parent.top
         }
 
-        height: QL.ScreenValues.statusBarHeight
+        height: QL.ScreenValues.statusBarHeight / Screen.devicePixelRatio.toFixed(2)
 
-        fillMode: Image.Tile
-
-        source: "qrc:/images/shadow"
+        color: "#44000000"
     }
 
     Image  {
@@ -169,7 +170,7 @@ ApplicationWindow {
     Connections {
         target: QL.PackageManager
 
-        onAddedApplicationToGrid: {
+        function onAddedApplicationToGrid(name, packageName) {
             var favs = favoritesData
             favs.push({'name': name, 'packageName': packageName})
             favoritesData = favs
@@ -184,16 +185,18 @@ ApplicationWindow {
         id: listModelFavorites
     }
 
-    //    D.Debug {
-    //        debugData: {
-    //            'sdkInt': QL.System.sdkInt,
-    //                    'height': applicationWindow.height,
-    //                    'width': applicationWindow.width,
-    //                    'dp': QL.ScreenValues.dp.toFixed(2),
-    //                    'dpi': QL.ScreenValues.dpi.toFixed(2),
-    //                    'density': QL.ScreenValues.density.toFixed(2),
-    //                    'isTablet': QL.ScreenValues.isTablet,
-    //                    'navBarVisible': QL.ScreenValues.navBarVisible
-    //        }
-    //    }
+//    D.Debug {
+//        debugData: {
+//            'sdkInt': QL.System.sdkInt,
+//            'height': applicationWindow.height,
+//            'width': applicationWindow.width,
+//            'dp': QL.ScreenValues.dp.toFixed(2),
+//            'dpi': QL.ScreenValues.dpi.toFixed(2),
+//            'density': QL.ScreenValues.density.toFixed(2),
+//            'isTablet': QL.ScreenValues.isTablet,
+//            'navBarVisible': QL.ScreenValues.navBarVisible,
+//            'dpiFromScreen': Screen.pixelDensity,
+//            'devicePixelRatio': Screen.devicePixelRatio.toFixed(2)
+//        }
+//    }
 }

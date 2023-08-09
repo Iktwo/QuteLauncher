@@ -1,5 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts 1.2
 import com.iktwo.qutelauncher 1.0
 
@@ -113,8 +113,8 @@ Item {
                     target: root
 
                     anchors {
-                        verticalCenter: parent !== root._originalParent ? parent.verticalCenter : undefined
-                        horizontalCenter: parent !== root._originalParent ? parent.horizontalCenter : undefined
+                        verticalCenter: root.parent !== root._originalParent ? root.parent.verticalCenter : undefined
+                        horizontalCenter: root.parent !== root._originalParent ? root.parent.horizontalCenter : undefined
                         left: undefined
                         right: undefined
                         top: undefined

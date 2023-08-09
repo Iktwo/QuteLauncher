@@ -165,8 +165,13 @@ FocusScope {
     Connections {
         target: QL.Launcher
 
-        onNewIntentReceived: explandableItem.close()
-        onMinimized: explandableItem.close()
+        function onNewIntentReceived() {
+            explandableItem.close()
+        }
+
+        function onMinimized() {
+            explandableItem.close()
+        }
     }
 
     ApplicationGridMenu {
